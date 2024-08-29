@@ -177,7 +177,6 @@ document.addEventListener('mousedown', () => {
     }
 });
 
-
 canvas.addEventListener('mousemove', (e) => {
     mouse = {
         x: e.clientX,
@@ -200,6 +199,7 @@ function endGame() {
     document.getElementById('health').style.display = 'none';
     document.getElementById('currency').style.display = 'none';
     document.getElementById('shop').style.display = 'none';
+    document.getElementById('titleScreen').style.display = 'block'; // Show title screen on game over
 }
 
 function buyHealthUpgrade() {
@@ -236,12 +236,34 @@ function hideShop() {
     document.getElementById('shop').style.display = 'none';
 }
 
-setInterval(checkWaveComplete, 1000); // Check if wave is complete every second
+function startGame() {
+    document.getElementById('titleScreen').style.display = 'none'; // Hide title screen
+    document.getElementById('score').style.display = 'block';
+    document.getElementById('health').style.display = 'block';
+    document.getElementById('currency').style.display = 'block';
+    document.getElementById('shop').style.display = 'block'; // Show shop
+    document.getElementById('gameOver').style.display = 'none'; // Hide game over
+    gameOver = false;
+    score = 0;
+    currency = INITIAL_CURRENCY;
+    player.hp = PLAYER_MAX_HP;
+    bullets = [];
+    enemies = [];
+    wave = 0;
+    spawnEnemies(); // Initial wave
+    gameLoop();
+}
 
-let gameOver = false;
-spawnEnemies(); // Initial wave
+document.getElementById('startButton').addEventListener('click', startGame);
 
-gameLoop();
+function setUp() {
+    document.getElementById('score').style.display = 'none';
+    document.getElementById('health').style.display = 'none';
+    document.getElementById('currency').style.display = 'none';
+    document.getElementById('shop').style.display = 'none';
+    document.getElementById('gameOver').style.display = 'none';
+    document.getElementById('titleScreen').style.display = 'block'; // Show title screen initially
+}
 
-// Show shop when the player starts the game
-showShop();
+setUp();
+
