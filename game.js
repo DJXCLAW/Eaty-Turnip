@@ -7,12 +7,13 @@ const HEIGHT = canvas.height = window.innerHeight;
 const PLAYER_SIZE = 32;
 const BULLET_SIZE = 8;
 const ENEMY_SIZE = 32;
-const PLAYER_SPEED = 5;
-const BULLET_SPEED = 8;
-const ENEMY_SPEED = 2;
+const BASE_PLAYER_SPEED = 5;
+const BASE_BULLET_SPEED = 8;
+const BASE_ENEMY_SPEED = 2;
 const FIRE_RATE = 200; // milliseconds
 const PLAYER_MAX_HP = 100;
 const DAMAGE_AMOUNT = 10; // Damage per enemy collision
+const INITIAL_CURRENCY = 0;
 
 let player = {
     x: WIDTH / 2,
@@ -20,7 +21,8 @@ let player = {
     width: PLAYER_SIZE,
     height: PLAYER_SIZE,
     color: 'white',
-    hp: PLAYER_MAX_HP
+    hp: PLAYER_MAX_HP,
+    speed: BASE_PLAYER_SPEED
 };
 
 let bullets = [];
@@ -29,6 +31,10 @@ let lastFireTime = 0;
 let score = 0;
 let wave = 0;
 let spawnRate = 3000; // milliseconds
+let currency = INITIAL_CURRENCY;
+let bulletSpeed = BASE_BULLET_SPEED;
+let playerSpeed = BASE_PLAYER_SPEED;
+let enemySpeed = BASE_ENEMY_SPEED;
 
 function createEnemy() {
     return {
@@ -44,10 +50,10 @@ function update() {
     if (gameOver) return;
 
     // Update player
-    if (keys['w']) player.y -= PLAYER_SPEED;
-    if (keys['s']) player.y += PLAYER_SPEED;
-    if (keys['a']) player.x -= PLAYER_SPEED;
-    if (keys['d']) player.x += PLAYER_SPEED;
+    if (keys['w']) player.y -= playerSpeed;
+    if (keys['s']) player.y += playerSpeed;
+    if (keys['a']) player.x -= playerSpeed;
+    if (keys['d']) player.x += playerSpeed;
 
     // Update bullets
     bullets.forEach(bullet => {
@@ -64,8 +70,8 @@ function update() {
         let dist = Math.sqrt(dx * dx + dy * dy);
         dx /= dist;
         dy /= dist;
-        enemy.x += dx * ENEMY_SPEED;
-        enemy.y += dy * ENEMY_SPEED;
+        enemy.x += dx * enemySpeed;
+        enemy.y += dy * enemySpeed;
     });
 
     // Collision detection for bullets and enemies
@@ -80,7 +86,9 @@ function update() {
                 enemies.splice(index, 1);
                 bullet.toRemove = true;
                 score += 10; // Increase score
+                currency += 5; // Increase currency
                 document.getElementById('score').textContent = `Score: ${score}`;
+                document.getElementById('currency').textContent = `Currency: ${currency}`;
             }
         });
     });
@@ -161,8 +169,8 @@ document.addEventListener('mousedown', () => {
         bullets.push({
             x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
             y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-            dx: Math.cos(angle) * BULLET_SPEED,
-            dy: Math.sin(angle) * BULLET_SPEED
+            dx: Math.cos(angle) * bulletSpeed,
+            dy: Math.sin(angle) * bulletSpeed
         });
     }
 });
@@ -187,11 +195,12 @@ function endGame() {
     document.getElementById('gameOver').style.display = 'block';
     document.getElementById('score').style.display = 'none';
     document.getElementById('health').style.display = 'none';
+    document.getElementById('currency').style.display = 'none';
+    document.getElementById('shop').style.display = 'none';
 }
 
-setInterval(checkWaveComplete, 1000); // Check if wave is complete every second
-
-let gameOver = false;
-spawnEnemies(); // Initial wave
-
-gameLoop();
+function buyHealthUpgrade() {
+    if (currency >= 50) {
+        player.hp = Math.min(player.hp + 50, PLAYER_MAX_HP);
+        currency -= 50;
+        document.getElementById('health').text
