@@ -35,6 +35,7 @@ let currency = INITIAL_CURRENCY;
 let bulletSpeed = BASE_BULLET_SPEED;
 let playerSpeed = BASE_PLAYER_SPEED;
 let enemySpeed = BASE_ENEMY_SPEED;
+let gameOver = false;
 
 function createEnemy() {
     return {
@@ -115,6 +116,8 @@ function update() {
             }
         }
     });
+
+    checkWaveComplete();
 }
 
 function draw() {
@@ -152,37 +155,6 @@ function spawnEnemies() {
         enemies.push(createEnemy());
     }
 }
-
-const keys = {};
-document.addEventListener('keydown', (e) => {
-    keys[e.key] = true;
-});
-document.addEventListener('keyup', (e) => {
-    keys[e.key] = false;
-});
-
-document.addEventListener('mousedown', () => {
-    const now = Date.now();
-    if (now - lastFireTime > FIRE_RATE) {
-        lastFireTime = now;
-        const dx = mouse.x - (player.x + PLAYER_SIZE / 2);
-        const dy = mouse.y - (player.y + PLAYER_SIZE / 2);
-        const magnitude = Math.sqrt(dx * dx + dy * dy); // Calculate magnitude
-        bullets.push({
-            x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-            y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-            dx: (dx / magnitude) * bulletSpeed, // Bullet speed in x direction
-            dy: (dy / magnitude) * bulletSpeed  // Bullet speed in y direction
-        });
-    }
-});
-
-canvas.addEventListener('mousemove', (e) => {
-    mouse = {
-        x: e.clientX,
-        y: e.clientY
-    };
-});
 
 function checkWaveComplete() {
     if (enemies.length === 0) {
@@ -266,4 +238,3 @@ function setUp() {
 }
 
 setUp();
-
