@@ -1,1 +1,92 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Pixel Art FPS Shooter</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+        canvas {
+            display: block;
+        }
+        #score, #health, #currency, #gameOver, #shop {
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            top: 10px;
+        }
+        #score {
+            left: 10px;
+        }
+        #health {
+            left: 10px;
+            top: 40px;
+        }
+        #currency {
+            left: 10px;
+            top: 70px;
+        }
+        #gameOver {
+            display: none;
+            top: 100px;
+            left: 10px;
+            font-size: 30px;
+            color: red;
+        }
+        #shop {
+            display: none;
+            top: 150px;
+            left: 10px;
+            font-size: 18px;
+        }
+        .shop-item {
+            margin-bottom: 10px;
+        }
+        .shop-button {
+            margin-left: 10px;
+        }
+        #titleScreen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+            font-size: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10;
+        }
+        #titleScreen button {
+            font-size: 20px;
+            padding: 10px 20px;
+            background-color: #333;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="titleScreen">
+        <div>2D Pixel Art FPS Shooter</div>
+        <button id="startButton">Start Game</button>
+    </div>
+    <div id="score">Score: 0</div>
+    <div id="health">HP: 100</div>
+    <div id="currency">Currency: 0</div>
+    <div id="gameOver">Game Over</div>
+    <div id="shop">
+        <div class="shop-item">Increase HP (+50) <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button></div>
+        <div class="shop-item">Increase Bullet Speed (+2) <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button></div>
+        <div class="shop-item">Increase Player Speed (+2) <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button></div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <script src="game.js"></script>
+</body>
+</html>
