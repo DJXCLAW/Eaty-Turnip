@@ -203,4 +203,42 @@ function buyHealthUpgrade() {
     if (currency >= 50) {
         player.hp = Math.min(player.hp + 50, PLAYER_MAX_HP);
         currency -= 50;
-        document.getElementById('health').text
+        document.getElementById('health').textContent = `HP: ${player.hp}`;
+        document.getElementById('currency').textContent = `Currency: ${currency}`;
+    }
+}
+
+function buyBulletSpeedUpgrade() {
+    if (currency >= 20) {
+        bulletSpeed += 2;
+        currency -= 20;
+        document.getElementById('currency').textContent = `Currency: ${currency}`;
+    }
+}
+
+function buyPlayerSpeedUpgrade() {
+    if (currency >= 30) {
+        playerSpeed += 2;
+        currency -= 30;
+        document.getElementById('currency').textContent = `Currency: ${currency}`;
+    }
+}
+
+function showShop() {
+    if (gameOver) return;
+    document.getElementById('shop').style.display = 'block';
+}
+
+function hideShop() {
+    document.getElementById('shop').style.display = 'none';
+}
+
+setInterval(checkWaveComplete, 1000); // Check if wave is complete every second
+
+let gameOver = false;
+spawnEnemies(); // Initial wave
+
+gameLoop();
+
+// Show shop when the player starts the game
+showShop();
