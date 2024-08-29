@@ -13,17 +13,32 @@
         canvas {
             display: block;
         }
-        #score {
+        #score, #health, #gameOver {
             position: absolute;
             color: white;
             font-size: 20px;
             top: 10px;
+        }
+        #score {
             left: 10px;
+        }
+        #health {
+            left: 10px;
+            top: 40px;
+        }
+        #gameOver {
+            display: none;
+            top: 100px;
+            left: 10px;
+            font-size: 30px;
+            color: red;
         }
     </style>
 </head>
 <body>
     <div id="score">Score: 0</div>
+    <div id="health">HP: 100</div>
+    <div id="gameOver">Game Over</div>
     <canvas id="gameCanvas"></canvas>
     <script src="game.js"></script>
 </body>
