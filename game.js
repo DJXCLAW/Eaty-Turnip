@@ -23,6 +23,9 @@ let player = {
 let bullets = [];
 let enemies = [];
 let lastFireTime = 0;
+let score = 0;
+let wave = 0;
+let spawnRate = 3000; // milliseconds
 
 function createEnemy() {
     return {
@@ -71,6 +74,8 @@ function update() {
             ) {
                 enemies.splice(index, 1);
                 bullet.toRemove = true;
+                score += 10; // Increase score
+                document.getElementById('score').textContent = `Score: ${score}`;
             }
         });
     });
@@ -104,6 +109,14 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
+function spawnEnemies() {
+    enemies = [];
+    const enemyCount = 5 + wave * 3; // Increase number of enemies per wave
+    for (let i = 0; i < enemyCount; i++) {
+        enemies.push(createEnemy());
+    }
+}
+
 const keys = {};
 document.addEventListener('keydown', (e) => {
     keys[e.key] = true;
@@ -133,11 +146,17 @@ canvas.addEventListener('mousemove', (e) => {
     };
 });
 
-function spawnEnemies() {
-    for (let i = 0; i < 5; i++) {
-        enemies.push(createEnemy());
+function checkWaveComplete() {
+    if (enemies.length === 0) {
+        wave++;
+        spawnEnemies();
+        spawnRate = Math.max(1000, spawnRate - 100); // Increase spawn rate
     }
 }
-spawnEnemies();
+
+setInterval(checkWaveComplete, 1000); // Check if wave is complete every second
+
+spawnEnemies(); // Initial wave
 
 gameLoop();
+
