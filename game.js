@@ -12,6 +12,7 @@ const BULLET_SPEED = 8;
 const ENEMY_SPEED = 2;
 const FIRE_RATE = 200; // milliseconds
 const PLAYER_MAX_HP = 100;
+const DAMAGE_AMOUNT = 10; // Damage per enemy collision
 
 let player = {
     x: WIDTH / 2,
@@ -67,7 +68,7 @@ function update() {
         enemy.y += dy * ENEMY_SPEED;
     });
 
-    // Collision detection
+    // Collision detection for bullets and enemies
     bullets.forEach(bullet => {
         enemies.forEach((enemy, index) => {
             if (
@@ -86,16 +87,21 @@ function update() {
 
     bullets = bullets.filter(bullet => !bullet.toRemove);
 
-    // Check for enemy collisions with player
-    enemies.forEach(enemy => {
+    // Collision detection for enemies and player
+    enemies.forEach((enemy, index) => {
         if (
             player.x < enemy.x + ENEMY_SIZE &&
             player.x + PLAYER_SIZE > enemy.x &&
             player.y < enemy.y + ENEMY_SIZE &&
             player.y + PLAYER_SIZE > enemy.y
         ) {
-            player.hp -= 10;
+            // Reduce player's health
+            player.hp -= DAMAGE_AMOUNT;
             document.getElementById('health').textContent = `HP: ${player.hp}`;
+
+            // Remove the enemy
+            enemies.splice(index, 1);
+
             if (player.hp <= 0) {
                 endGame();
             }
