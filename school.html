@@ -13,7 +13,7 @@
         canvas {
             display: block;
         }
-        #score, #health, #currency, #gameOver, #shop {
+        #score, #health, #currency, #gameOver, #shop, #quizPopup {
             position: absolute;
             color: white;
             font-size: 20px;
@@ -43,10 +43,19 @@
             left: 10px;
             font-size: 18px;
         }
-        .shop-item {
+        #quizPopup {
+            display: none;
+            top: 100px;
+            left: 10px;
+            font-size: 18px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .shop-item, .quiz-option {
             margin-bottom: 10px;
         }
-        .shop-button {
+        .shop-button, .quiz-button {
             margin-left: 10px;
         }
     </style>
@@ -60,6 +69,10 @@
         <div class="shop-item">Increase HP (+50) <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button></div>
         <div class="shop-item">Increase Bullet Speed (+2) <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button></div>
         <div class="shop-item">Increase Player Speed (+2) <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button></div>
+    </div>
+    <div id="quizPopup">
+        <div id="quizQuestion"></div>
+        <div id="quizOptions"></div>
     </div>
     <canvas id="gameCanvas"></canvas>
     <script src="gameschool.js"></script>
