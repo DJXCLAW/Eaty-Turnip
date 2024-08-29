@@ -165,15 +165,18 @@ document.addEventListener('mousedown', () => {
     const now = Date.now();
     if (now - lastFireTime > FIRE_RATE) {
         lastFireTime = now;
-        const angle = Math.atan2(player.y - mouse.y, player.x - mouse.x);
+        const dx = mouse.x - (player.x + PLAYER_SIZE / 2);
+        const dy = mouse.y - (player.y + PLAYER_SIZE / 2);
+        const magnitude = Math.sqrt(dx * dx + dy * dy); // Calculate magnitude
         bullets.push({
             x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
             y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-            dx: Math.cos(angle) * bulletSpeed,
-            dy: Math.sin(angle) * bulletSpeed
+            dx: (dx / magnitude) * bulletSpeed, // Bullet speed in x direction
+            dy: (dy / magnitude) * bulletSpeed  // Bullet speed in y direction
         });
     }
 });
+
 
 canvas.addEventListener('mousemove', (e) => {
     mouse = {
