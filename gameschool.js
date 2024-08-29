@@ -36,6 +36,13 @@ let bulletSpeed = BASE_BULLET_SPEED;
 let playerSpeed = BASE_PLAYER_SPEED;
 let enemySpeed = BASE_ENEMY_SPEED;
 let gameOver = false;
+let quizData = [
+    { question: 'What causes the Coriolis effect?', options: ['Earth’s rotation', 'Wind patterns', 'Ocean currents', 'Magnetic fields'], answer: 0 },
+    { question: 'What drives jet streams?', options: ['Temperature differences', 'Ocean currents', 'Tides', 'Earth’s rotation'], answer: 0 },
+    { question: 'What is a sea breeze?', options: ['Cool air moving from sea to land', 'Warm air moving from land to sea', 'A storm', 'A high-pressure system'], answer: 0 },
+    { question: 'What happens from high pressure to low pressure?', options: ['Air moves from high to low pressure', 'Air moves from low to high pressure', 'Air remains stationary', 'Temperature rises'], answer: 0 }
+];
+let currentQuestionIndex = 0;
 
 function createEnemy() {
     return {
@@ -161,81 +168,9 @@ function checkWaveComplete() {
         wave++;
         spawnEnemies();
         spawnRate = Math.max(1000, spawnRate - 100); // Increase spawn rate
+        showQuiz();
     }
 }
 
 function endGame() {
     gameOver = true;
-    document.getElementById('gameOver').style.display = 'block';
-    document.getElementById('score').style.display = 'none';
-    document.getElementById('health').style.display = 'none';
-    document.getElementById('currency').style.display = 'none';
-    document.getElementById('shop').style.display = 'none';
-}
-
-function buyHealthUpgrade() {
-    if (currency >= 50) {
-        player.hp = Math.min(player.hp + 50, PLAYER_MAX_HP);
-        currency -= 50;
-        document.getElementById('health').textContent = `HP: ${player.hp}`;
-        document.getElementById('currency').textContent = `Currency: ${currency}`;
-    }
-}
-
-function buyBulletSpeedUpgrade() {
-    if (currency >= 20) {
-        bulletSpeed += 2;
-        currency -= 20;
-        document.getElementById('currency').textContent = `Currency: ${currency}`;
-    }
-}
-
-function buyPlayerSpeedUpgrade() {
-    if (currency >= 30) {
-        playerSpeed += 2;
-        currency -= 30;
-        document.getElementById('currency').textContent = `Currency: ${currency}`;
-    }
-}
-
-function showShop() {
-    if (gameOver) return;
-    document.getElementById('shop').style.display = 'block';
-}
-
-function hideShop() {
-    document.getElementById('shop').style.display = 'none';
-}
-
-document.addEventListener('keydown', (e) => {
-    keys[e.key] = true;
-});
-document.addEventListener('keyup', (e) => {
-    keys[e.key] = false;
-});
-
-document.addEventListener('mousedown', () => {
-    const now = Date.now();
-    if (now - lastFireTime > FIRE_RATE) {
-        lastFireTime = now;
-        const angle = Math.atan2(mouse.y - player.y, mouse.x - player.x);
-        bullets.push({
-            x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-            y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-            dx: Math.cos(angle) * bulletSpeed,
-            dy: Math.sin(angle) * bulletSpeed
-        });
-    }
-});
-
-canvas.addEventListener('mousemove', (e) => {
-    mouse = {
-        x: e.clientX,
-        y: e.clientY
-    };
-});
-
-let keys = {};
-let mouse = { x: WIDTH / 2, y: HEIGHT / 2 };
-
-gameLoop();
