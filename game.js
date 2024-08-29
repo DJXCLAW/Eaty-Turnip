@@ -11,13 +11,15 @@ const PLAYER_SPEED = 5;
 const BULLET_SPEED = 8;
 const ENEMY_SPEED = 2;
 const FIRE_RATE = 200; // milliseconds
+const PLAYER_MAX_HP = 100;
 
 let player = {
     x: WIDTH / 2,
     y: HEIGHT / 2,
     width: PLAYER_SIZE,
     height: PLAYER_SIZE,
-    color: 'white'
+    color: 'white',
+    hp: PLAYER_MAX_HP
 };
 
 let bullets = [];
@@ -38,6 +40,8 @@ function createEnemy() {
 }
 
 function update() {
+    if (gameOver) return;
+
     // Update player
     if (keys['w']) player.y -= PLAYER_SPEED;
     if (keys['s']) player.y += PLAYER_SPEED;
@@ -81,9 +85,27 @@ function update() {
     });
 
     bullets = bullets.filter(bullet => !bullet.toRemove);
+
+    // Check for enemy collisions with player
+    enemies.forEach(enemy => {
+        if (
+            player.x < enemy.x + ENEMY_SIZE &&
+            player.x + PLAYER_SIZE > enemy.x &&
+            player.y < enemy.y + ENEMY_SIZE &&
+            player.y + PLAYER_SIZE > enemy.y
+        ) {
+            player.hp -= 10;
+            document.getElementById('health').textContent = `HP: ${player.hp}`;
+            if (player.hp <= 0) {
+                endGame();
+            }
+        }
+    });
 }
 
 function draw() {
+    if (gameOver) return;
+
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
     // Draw player
@@ -154,9 +176,16 @@ function checkWaveComplete() {
     }
 }
 
+function endGame() {
+    gameOver = true;
+    document.getElementById('gameOver').style.display = 'block';
+    document.getElementById('score').style.display = 'none';
+    document.getElementById('health').style.display = 'none';
+}
+
 setInterval(checkWaveComplete, 1000); // Check if wave is complete every second
 
+let gameOver = false;
 spawnEnemies(); // Initial wave
 
 gameLoop();
-
