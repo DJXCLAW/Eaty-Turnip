@@ -15,6 +15,12 @@ const PLAYER_MAX_HP = 100;
 const DAMAGE_AMOUNT = 10; // Damage per enemy collision
 const INITIAL_CURRENCY = 0;
 
+let hasShotgun = false;
+const SHOTGUN_COST = 100;
+const SHOTGUN_FIRE_RATE = 600; // Slower cooldown in milliseconds
+const SHOTGUN_BULLET_SPREAD = 0.2; // Spread angle in radians
+const SHOTGUN_BULLETS = 5; // Number of bullets per shot
+
 let player = {
     x: WIDTH / 2,
     y: HEIGHT / 2,
@@ -165,19 +171,37 @@ document.addEventListener('keyup', (e) => {
 
 document.addEventListener('mousedown', () => {
     const now = Date.now();
-    if (now - lastFireTime > FIRE_RATE) {
+    const fireRate = hasShotgun ? SHOTGUN_FIRE_RATE : FIRE_RATE;
+
+    if (now - lastFireTime > fireRate) {
         lastFireTime = now;
-        const dx = mouse.x - (player.x + PLAYER_SIZE / 2);
-        const dy = mouse.y - (player.y + PLAYER_SIZE / 2);
-        const magnitude = Math.sqrt(dx * dx + dy * dy); // Calculate magnitude
-        bullets.push({
-            x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-            y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-            dx: (dx / magnitude) * bulletSpeed, // Bullet speed in x direction
-            dy: (dy / magnitude) * bulletSpeed  // Bullet speed in y direction
-        });
+        if (hasShotgun) {
+            // Shotgun firing
+            for (let i = 0; i < SHOTGUN_BULLETS; i++) {
+                const angleOffset = (Math.random() - 0.5) * SHOTGUN_BULLET_SPREAD; // Random spread
+                const angle = Math.atan2(mouse.y - (player.y + PLAYER_SIZE / 2), mouse.x - (player.x + PLAYER_SIZE / 2)) + angleOffset;
+                bullets.push({
+                    x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+                    y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+                    dx: Math.cos(angle) * bulletSpeed,
+                    dy: Math.sin(angle) * bulletSpeed
+                });
+            }
+        } else {
+            // Regular bullet firing
+            const dx = mouse.x - (player.x + PLAYER_SIZE / 2);
+            const dy = mouse.y - (player.y + PLAYER_SIZE / 2);
+            const magnitude = Math.sqrt(dx * dx + dy * dy);
+            bullets.push({
+                x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+                y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+                dx: (dx / magnitude) * bulletSpeed,
+                dy: (dy / magnitude) * bulletSpeed
+            });
+        }
     }
 });
+
 
 
 canvas.addEventListener('mousemove', (e) => {
