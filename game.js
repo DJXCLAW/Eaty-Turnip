@@ -15,8 +15,6 @@ const PLAYER_MAX_HP = 100;
 const DAMAGE_AMOUNT = 10; // Damage per enemy collision
 const INITIAL_CURRENCY = 0;
 
-document.getElementById('wave').textContent = `Wave: ${wave}`; // Initialize wave display
-
 let player = {
     x: WIDTH / 2,
     y: HEIGHT / 2,
@@ -37,6 +35,8 @@ let currency = INITIAL_CURRENCY;
 let bulletSpeed = BASE_BULLET_SPEED;
 let playerSpeed = BASE_PLAYER_SPEED;
 let enemySpeed = BASE_ENEMY_SPEED;
+
+document.getElementById('wave').textContent = `Wave: ${wave}`; // Initialize wave display
 
 function createEnemy() {
     return {
