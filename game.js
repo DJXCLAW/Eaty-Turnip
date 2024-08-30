@@ -153,27 +153,6 @@ function update() {
 
     bullets = bullets.filter(bullet => !bullet.toRemove);
 
-    // Collision detection for enemies and player
-    enemies.forEach((enemy, index) => {
-        if (
-            player.x < enemy.x + ENEMY_SIZE &&
-            player.x + PLAYER_SIZE > enemy.x &&
-            player.y < enemy.y + ENEMY_SIZE &&
-            player.y + PLAYER_SIZE > enemy.y
-        ) {
-            // Reduce player's health
-            player.hp -= DAMAGE_AMOUNT;
-            document.getElementById('health').textContent = `HP: ${player.hp}`;
-
-            // Remove the enemy
-            enemies.splice(index, 1);
-
-            if (player.hp <= 0) {
-                endGame();
-            }
-        }
-    });
-
     checkWaveComplete();
 }
 
