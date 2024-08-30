@@ -171,7 +171,6 @@ function endGame() {
     document.getElementById('health').style.display = 'none';
     document.getElementById('currency').style.display = 'none';
     document.getElementById('shop').style.display = 'none';
-    document.getElementById('titleScreen').style.display = 'block'; // Show title screen on game over
 }
 
 function buyHealthUpgrade() {
@@ -208,33 +207,35 @@ function hideShop() {
     document.getElementById('shop').style.display = 'none';
 }
 
-function startGame() {
-    document.getElementById('titleScreen').style.display = 'none'; // Hide title screen
-    document.getElementById('score').style.display = 'block';
-    document.getElementById('health').style.display = 'block';
-    document.getElementById('currency').style.display = 'block';
-    document.getElementById('shop').style.display = 'block'; // Show shop
-    document.getElementById('gameOver').style.display = 'none'; // Hide game over
-    gameOver = false;
-    score = 0;
-    currency = INITIAL_CURRENCY;
-    player.hp = PLAYER_MAX_HP;
-    bullets = [];
-    enemies = [];
-    wave = 0;
-    spawnEnemies(); // Initial wave
-    gameLoop();
-}
+document.addEventListener('keydown', (e) => {
+    keys[e.key] = true;
+});
+document.addEventListener('keyup', (e) => {
+    keys[e.key] = false;
+});
 
-document.getElementById('startButton').addEventListener('click', startGame);
+document.addEventListener('mousedown', () => {
+    const now = Date.now();
+    if (now - lastFireTime > FIRE_RATE) {
+        lastFireTime = now;
+        const angle = Math.atan2(mouse.y - player.y, mouse.x - player.x);
+        bullets.push({
+            x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+            y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+            dx: Math.cos(angle) * bulletSpeed,
+            dy: Math.sin(angle) * bulletSpeed
+        });
+    }
+});
 
-function setUp() {
-    document.getElementById('score').style.display = 'none';
-    document.getElementById('health').style.display = 'none';
-    document.getElementById('currency').style.display = 'none';
-    document.getElementById('shop').style.display = 'none';
-    document.getElementById('gameOver').style.display = 'none';
-    document.getElementById('titleScreen').style.display = 'block'; // Show title screen initially
-}
+canvas.addEventListener('mousemove', (e) => {
+    mouse = {
+        x: e.clientX,
+        y: e.clientY
+    };
+});
 
-setUp();
+let keys = {};
+let mouse = { x: WIDTH / 2, y: HEIGHT / 2 };
+
+gameLoop();
