@@ -260,3 +260,33 @@ function buyShotgun() {
         shotgunPurchased = true;
         currency -= 100;
         document.getElementById('currency').textContent = `Currency: ${currency}`;
+        document.querySelector('.shop-item:nth-child(4) span').textContent = 'Purchased';
+    }
+}
+
+function showShop() {
+    gamePaused = true;
+    document.getElementById('shopContainer').style.display = 'flex';
+}
+
+function hideShop() {
+    gamePaused = false;
+    document.getElementById('shopContainer').style.display = 'none';
+    gameLoop(); // Restart the game loop
+}
+
+function gamePaused() {
+    gamePaused = true;
+}
+
+function gameResumed() {
+    gamePaused = false;
+}
+
+setInterval(checkWaveComplete, 1000); // Check if wave is complete every second
+
+let gameOver = false;
+spawnEnemies(); // Initial wave
+
+gameLoop();
+
