@@ -15,6 +15,7 @@ const PLAYER_MAX_HP = 100;
 const DAMAGE_AMOUNT = 10; // Damage per enemy collision
 const INITIAL_CURRENCY = 0;
 
+// Shotgun variables
 let hasShotgun = false;
 const SHOTGUN_COST = 100;
 const SHOTGUN_FIRE_RATE = 600; // Slower cooldown in milliseconds
@@ -35,14 +36,15 @@ let bullets = [];
 let enemies = [];
 let lastFireTime = 0;
 let score = 0;
-let wave = 0;
+let wave = 0;  // Wave variable declaration
 let spawnRate = 3000; // milliseconds
 let currency = INITIAL_CURRENCY;
 let bulletSpeed = BASE_BULLET_SPEED;
 let playerSpeed = BASE_PLAYER_SPEED;
 let enemySpeed = BASE_ENEMY_SPEED;
 
-document.getElementById('wave').textContent = `Wave: ${wave}`; // Initialize wave display
+// Initialize wave display
+document.getElementById('wave').textContent = `Wave: ${wave}`;
 
 function createEnemy() {
     return {
@@ -123,6 +125,8 @@ function update() {
             }
         }
     });
+
+    checkWaveComplete();
 }
 
 function draw() {
@@ -202,8 +206,6 @@ document.addEventListener('mousedown', () => {
     }
 });
 
-
-
 canvas.addEventListener('mousemove', (e) => {
     mouse = {
         x: e.clientX,
@@ -214,12 +216,11 @@ canvas.addEventListener('mousemove', (e) => {
 function checkWaveComplete() {
     if (enemies.length === 0) {
         wave++;
+        document.getElementById('wave').textContent = `Wave: ${wave}`; // Update wave display
         spawnEnemies();
         spawnRate = Math.max(1000, spawnRate - 100); // Increase spawn rate
-        document.getElementById('wave').textContent = `Wave: ${wave}`; // Update wave display
     }
 }
-
 
 function endGame() {
     gameOver = true;
@@ -252,6 +253,19 @@ function buyPlayerSpeedUpgrade() {
         playerSpeed += 2;
         currency -= 30;
         document.getElementById('currency').textContent = `Currency: ${currency}`;
+    }
+}
+
+function buyShotgun() {
+    if (currency >= SHOTGUN_COST && !hasShotgun) {
+        hasShotgun = true;
+        currency -= SHOTGUN_COST;
+        document.getElementById('currency').textContent = `Currency: ${currency}`;
+        alert('Shotgun purchased! It has a slower cooldown but shoots a spread.');
+    } else if (hasShotgun) {
+        alert('You already have the shotgun!');
+    } else {
+        alert('Not enough currency to buy the shotgun.');
     }
 }
 
