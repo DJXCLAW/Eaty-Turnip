@@ -17,7 +17,7 @@ const INITIAL_CURRENCY = 0;
 
 // Shotgun variables
 let hasShotgun = false;
-const SHOTGUN_COST = 100;
+const SHOTGUN_COST = 150;
 const SHOTGUN_FIRE_RATE = 600; // Slower cooldown in milliseconds
 const SHOTGUN_BULLET_SPREAD = 0.2; // Spread angle in radians
 const SHOTGUN_BULLETS = 5; // Number of bullets per shot
