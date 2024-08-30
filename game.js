@@ -1,5 +1,3 @@
-
-
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -18,6 +16,7 @@ const DAMAGE_AMOUNT = 10; // Damage per enemy collision
 const INITIAL_CURRENCY = 0;
 
 let gamePaused = false;
+let gameOver = false;
 let shotgunPurchased = false;
 let player = {
     x: WIDTH / 2,
@@ -39,6 +38,8 @@ let currency = INITIAL_CURRENCY;
 let bulletSpeed = BASE_BULLET_SPEED;
 let playerSpeed = BASE_PLAYER_SPEED;
 let enemySpeed = BASE_ENEMY_SPEED;
+
+let mouse = { x: WIDTH / 2, y: HEIGHT / 2 }; // Initialize mouse object
 
 function createEnemy() {
     return {
@@ -232,23 +233,4 @@ function endGame() {
     hideShop(); // Hide shop when game is over
 }
 
-function buyHealthUpgrade() {
-    if (currency >= 50) {
-        player.hp = Math.min(player.hp + 50, PLAYER_MAX_HP);
-        currency -= 50;
-        document.getElementById('health').textContent = `HP: ${player.hp}`;
-        document.getElementById('currency').textContent = `Currency: ${currency}`;
-    }
-}
-
-function buyBulletSpeedUpgrade() {
-    if (currency >= 20) {
-        bulletSpeed += 2;
-        currency -= 20;
-        document.getElementById('currency').textContent = `Currency: ${currency}`;
-    }
-}
-
-function buyPlayerSpeedUpgrade() {
-    if (currency >= 30) {
-        playerSpeed
+function buyHealthUpgrade
