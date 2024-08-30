@@ -39,33 +39,36 @@
         }
         #shopContainer {
             display: none;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(255, 255, 255, 0.9);
-            z-index: 10;
-        }
-        #shop {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            font-size: 18px;
+            color: black;
             text-align: center;
+            padding-top: 50px;
         }
-        .shop-item {
-            margin-bottom: 10px;
+        #shopContainer .shop-item {
+            margin-bottom: 20px;
         }
-        .shop-button {
+        #shopContainer .shop-button {
             margin-left: 10px;
         }
-        .shop-price {
-            font-size: 14px;
-            color: gray;
+        #shopContainer .shop-item span {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        .resume-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+            padding: 5px 10px;
+            background-color: #444;
+            color: white;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -74,16 +77,29 @@
     <div id="health">HP: 100</div>
     <div id="currency">Currency: 0</div>
     <div id="gameOver">Game Over</div>
+
     <div id="shopContainer">
-        <div id="shop">
-            <div class="shop-item">Increase HP (+50) - <span class="shop-price">50 Currency</span> <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button></div>
-            <div class="shop-item">Increase Bullet Speed (+2) - <span class="shop-price">20 Currency</span> <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button></div>
-            <div class="shop-item">Increase Player Speed (+2) - <span class="shop-price">30 Currency</span> <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button></div>
-            <div class="shop-item">Buy Shotgun - <span class="shop-price">100 Currency</span> <button class="shop-button" onclick="buyShotgun()">Buy</button></div>
-            <button onclick="hideShop()">Close Shop</button>
-        </div>
+        <div class="shop-item">Increase HP (+50) <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button></div>
+        <div class="shop-item">Increase Bullet Speed (+2) <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button></div>
+        <div class="shop-item">Increase Player Speed (+2) <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button></div>
+        <div class="shop-item">Shotgun (100) <button class="shop-button" onclick="buyShotgun()">Buy</button> <span id="shotgunStatus">Not Purchased</span></div>
+        <button class="resume-button" onclick="hideShop()">Resume Game</button>
     </div>
+
     <canvas id="gameCanvas"></canvas>
     <script src="game.js"></script>
+    <script>
+        function showShop() {
+            gamePaused = true;
+            document.getElementById('shopContainer').style.display = 'flex';
+        }
+
+        function hideShop() {
+            gamePaused = false;
+            document.getElementById('shopContainer').style.display = 'none';
+            gameLoop(); // Restart the game loop
+        }
+    </script>
 </body>
 </html>
+
