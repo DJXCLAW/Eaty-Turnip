@@ -2,8 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    const WIDTH = canvas.width = window.innerWidth;
-    const HEIGHT = canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
 
     const PLAYER_SIZE = 32;
     const BULLET_SIZE = 8;
@@ -60,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function update() {
-        if (gameOver || isPaused) return; // Skip updating if game is paused
+        if (gameOver) return;
 
         // Update player
         if (keys['w']) player.y = Math.max(0, player.y - playerSpeed);
@@ -156,6 +159,10 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fillStyle = enemy.color;
             ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
         });
+
+        // Debug: Draw a simple shape to verify rendering
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(50, 50, 100, 100);
     }
 
     function gameLoop() {
@@ -274,6 +281,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const keys = {};
     document.addEventListener('keydown', (e) => {
         keys[e.key] = true;
+        if (e.code === 'Space') {
+            fireBullet();
+        }
     });
 
     document.addEventListener('keyup', (e) => {
@@ -286,9 +296,12 @@ document.addEventListener('DOMContentLoaded', () => {
         mouse.y = e.clientY - rect.top;
     });
 
-    canvas.addEventListener('click', () => {
-        fireBullet();
-    });
+    document.getElementById('shopButton').addEventListener('click', showShop);
+    document.getElementById('closeShopButton').addEventListener('click', hideShop);
+    document.getElementById('buyHealth').addEventListener('click', buyHealthUpgrade);
+    document.getElementById('buyBulletSpeed').addEventListener('click', buyBulletSpeedUpgrade);
+    document.getElementById('buyPlayerSpeed').addEventListener('click', buyPlayerSpeedUpgrade);
+    document.getElementById('buyShotgun').addEventListener('click', buyShotgun);
 
     gameLoop();
     spawnEnemies();
