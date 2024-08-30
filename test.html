@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Pixel Art FPS Shooter</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+       canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
+
+        #score, #health, #currency, #wave, #gameOver, #shop {
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            top: 10px;
+        }
+        #score {
+            left: 10px;
+        }
+        #health {
+            left: 10px;
+            top: 40px;
+        }
+        #currency {
+            left: 10px;
+            top: 70px;
+        }
+        #wave {
+            left: 10px;
+            top: 100px;
+        }
+        #gameOver {
+            display: none;
+            top: 150px;
+            left: 10px;
+            font-size: 30px;
+            color: red;
+        }
+        #shop {
+            display: none;
+            top: 200px;
+            left: 10px;
+            font-size: 18px;
+        }
+        .shop-item {
+            margin-bottom: 10px;
+        }
+        .shop-button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="score">Score: 0</div>
+    <div id="health">HP: 100</div>
+    <div id="currency">Currency: 0</div>
+    <div id="wave">Wave: 0</div> <!-- Added wave tracker -->
+    <div id="gameOver">Game Over</div>
+    <div id="shop">
+        <div class="shop-item">Increase HP (+50) <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button></div>
+        <div class="shop-item">Increase Bullet Speed (+2) <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button></div>
+        <div class="shop-item">Increase Player Speed (+2) <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button></div>
+        <div class="shop-item">Buy Shotgun <button class="shop-button" onclick="buyShotgun()">Buy</button></div> <!-- Added shotgun purchase option -->
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <script src="game.js"></script>
+</body>
+</html>
