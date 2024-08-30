@@ -13,7 +13,7 @@
         canvas {
             display: block;
         }
-        #score, #health, #currency, #gameOver, #shop {
+        #score, #health, #currency, #wave, #gameOver, #shop {
             position: absolute;
             color: white;
             font-size: 20px;
@@ -30,16 +30,20 @@
             left: 10px;
             top: 70px;
         }
+        #wave {
+            left: 10px;
+            top: 100px; /* Adjust position as needed */
+        }
         #gameOver {
             display: none;
-            top: 100px;
+            top: 140px; /* Adjust position as needed */
             left: 10px;
             font-size: 30px;
             color: red;
         }
         #shop {
             display: none;
-            top: 150px;
+            top: 180px; /* Adjust position as needed */
             left: 10px;
             font-size: 18px;
         }
@@ -55,6 +59,7 @@
     <div id="score">Score: 0</div>
     <div id="health">HP: 100</div>
     <div id="currency">Currency: 0</div>
+    <div id="wave">Wave: 1</div> <!-- Added wave tracker -->
     <div id="gameOver">Game Over</div>
     <div id="shop">
         <div class="shop-item">Increase HP (+50) <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button></div>
@@ -65,5 +70,3 @@
     <script src="game.js"></script>
 </body>
 </html>
-
-
