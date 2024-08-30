@@ -17,7 +17,7 @@ const INITIAL_CURRENCY = 0;
 
 // Shotgun variables
 let hasShotgun = false;
-const SHOTGUN_COST = 150;
+const SHOTGUN_COST = 100;
 const SHOTGUN_FIRE_RATE = 600; // Slower cooldown in milliseconds
 const SHOTGUN_BULLET_SPREAD = 0.2; // Spread angle in radians
 const SHOTGUN_BULLETS = 5; // Number of bullets per shot
@@ -60,10 +60,10 @@ function update() {
     if (gameOver) return;
 
     // Update player
-    if (keys['w']) player.y = Math.max(0, player.y - playerSpeed);
-    if (keys['s']) player.y = Math.min(HEIGHT - PLAYER_SIZE, player.y + playerSpeed);
-    if (keys['a']) player.x = Math.max(0, player.x - playerSpeed);
-    if (keys['d']) player.x = Math.min(WIDTH - PLAYER_SIZE, player.x + playerSpeed);
+    if (keys['w']) player.y -= playerSpeed;
+    if (keys['s']) player.y += playerSpeed;
+    if (keys['a']) player.x -= playerSpeed;
+    if (keys['d']) player.x += playerSpeed;
 
     // Update bullets
     bullets.forEach(bullet => {
@@ -82,55 +82,7 @@ function update() {
         dy /= dist;
         enemy.x += dx * enemySpeed;
         enemy.y += dy * enemySpeed;
-
-        // Ensure enemies stay within bounds
-        enemy.x = Math.max(0, Math.min(WIDTH - ENEMY_SIZE, enemy.x));
-        enemy.y = Math.max(0, Math.min(HEIGHT - ENEMY_SIZE, enemy.y));
     });
-
-    // Collision detection for bullets and enemies
-    bullets.forEach(bullet => {
-        enemies.forEach((enemy, index) => {
-            if (
-                bullet.x < enemy.x + ENEMY_SIZE &&
-                bullet.x + BULLET_SIZE > enemy.x &&
-                bullet.y < enemy.y + ENEMY_SIZE &&
-                bullet.y + BULLET_SIZE > enemy.y
-            ) {
-                enemies.splice(index, 1);
-                bullet.toRemove = true;
-                score += 10; // Increase score
-                currency += 5; // Increase currency
-                document.getElementById('score').textContent = `Score: ${score}`;
-                document.getElementById('currency').textContent = `Currency: ${currency}`;
-            }
-        });
-    });
-
-    bullets = bullets.filter(bullet => !bullet.toRemove);
-
-    // Collision detection for enemies and player
-    enemies.forEach((enemy, index) => {
-        if (
-            player.x < enemy.x + ENEMY_SIZE &&
-            player.x + PLAYER_SIZE > enemy.x &&
-            player.y < enemy.y + ENEMY_SIZE &&
-            player.y + PLAYER_SIZE > enemy.y
-        ) {
-            // Reduce player's health
-            player.hp -= DAMAGE_AMOUNT;
-            document.getElementById('health').textContent = `HP: ${player.hp}`;
-
-            // Remove the enemy
-            enemies.splice(index, 1);
-
-            if (player.hp <= 0) {
-                endGame();
-            }
-        }
-    });
-}
-
 
     // Collision detection for bullets and enemies
     bullets.forEach(bullet => {
@@ -305,7 +257,6 @@ function buyPlayerSpeedUpgrade() {
 }
 
 function buyShotgun() {
-    console.log(`Currency before purchase: ${currency}`);
     if (currency >= SHOTGUN_COST && !hasShotgun) {
         hasShotgun = true;
         currency -= SHOTGUN_COST;
@@ -316,9 +267,7 @@ function buyShotgun() {
     } else {
         alert('Not enough currency to buy the shotgun.');
     }
-    console.log(`Currency after purchase: ${currency}`);
 }
-
 
 function showShop() {
     if (gameOver) return;
