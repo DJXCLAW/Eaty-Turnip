@@ -242,4 +242,35 @@ function buyHealthUpgrade() {
         player.hp = Math.min(player.hp + 50, PLAYER_MAX_HP);
         currency -= 50;
         document.getElementById('health').textContent = `HP: ${player.hp}`;
-        document.getElementById('currency').textContent = `
+        document.getElementById('currency').textContent = `Currency: ${currency}`;
+    }
+}
+
+function buyBulletSpeedUpgrade() {
+    if (currency >= 50) {
+        bulletSpeed += 2;
+        currency -= 50;
+        document.getElementById('currency').textContent = `Currency: ${currency}`;
+    }
+}
+
+function buyPlayerSpeedUpgrade() {
+    if (currency >= 50) {
+        playerSpeed += 2;
+        currency -= 50;
+        document.getElementById('currency').textContent = `Currency: ${currency}`;
+    }
+}
+
+function buyShotgun() {
+    if (currency >= SHOTGUN_COST) {
+        hasShotgun = true;
+        currency -= SHOTGUN_COST;
+        document.getElementById('shop').style.display = 'none'; // Hide shop after purchase
+        document.getElementById('currency').textContent = `Currency: ${currency}`;
+    }
+}
+
+// Start the game
+spawnEnemies();
+gameLoop();
