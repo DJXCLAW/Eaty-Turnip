@@ -1,236 +1,235 @@
+// Get the canvas element and its 2D drawing context
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-const WIDTH = canvas.width = window.innerWidth;
-const HEIGHT = canvas.height = window.innerHeight;
+// Set the canvas dimensions to match the window size
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
+// Game variables
 const PLAYER_SIZE = 32;
-const BULLET_SIZE = 8;
 const ENEMY_SIZE = 32;
+const BULLET_SIZE = 8;
 const BASE_PLAYER_SPEED = 5;
 const BASE_BULLET_SPEED = 8;
-const BASE_ENEMY_SPEED = 2;
-const FIRE_RATE = 200; // milliseconds
-const PLAYER_MAX_HP = 100;
-const DAMAGE_AMOUNT = 10; // Damage per enemy collision
-const INITIAL_CURRENCY = 0;
+const BASE_ENEMY_SPEED = 1; // Enemies move slower towards the player
+let playerCoins = 0;
+let playerWeapon = 'pistol'; // Start with a basic pistol
+let playerHp = 100;
 
-let gamePaused = false;
-let gameOver = false;
-let shotgunPurchased = false;
 let player = {
-    x: WIDTH / 2,
-    y: HEIGHT / 2,
+    x: canvas.width / 2 - PLAYER_SIZE / 2,
+    y: canvas.height - PLAYER_SIZE * 2,
     width: PLAYER_SIZE,
     height: PLAYER_SIZE,
-    color: 'white',
-    hp: PLAYER_MAX_HP,
-    speed: BASE_PLAYER_SPEED
+    speed: BASE_PLAYER_SPEED,
+    hp: playerHp
 };
 
 let bullets = [];
 let enemies = [];
 let lastFireTime = 0;
-let score = 0;
-let wave = 0;
-let spawnRate = 3000; // milliseconds
-let currency = INITIAL_CURRENCY;
-let bulletSpeed = BASE_BULLET_SPEED;
-let playerSpeed = BASE_PLAYER_SPEED;
-let enemySpeed = BASE_ENEMY_SPEED;
+let waveNumber = 1; // Start at wave 1
+const FIRE_RATE = 200; // Milliseconds for pistol
+const SHOTGUN_FIRE_RATE = 500; // Milliseconds for shotgun
+const ENEMY_SPAWN_RATE = 5; // Number of enemies per wave
 
-let mouse = { x: WIDTH / 2, y: HEIGHT / 2 }; // Initialize mouse object
+// Shop items
+const shopItems = {
+    shotgun: { cost: 100, fireRate: SHOTGUN_FIRE_RATE, bulletsPerShot: 3 },
+    heal: { cost: 50, healAmount: 50 }
+};
 
-function createEnemy() {
-    return {
-        x: Math.random() * WIDTH,
-        y: Math.random() * HEIGHT,
-        width: ENEMY_SIZE,
-        height: ENEMY_SIZE,
-        color: 'red'
-    };
+// Helper function to clear the canvas
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function update() {
-    if (gameOver || gamePaused) return;
-
-    // Update player
-    if (keys['w'] && player.y > 0) player.y -= playerSpeed;
-    if (keys['s'] && player.y < HEIGHT - PLAYER_SIZE) player.y += playerSpeed;
-    if (keys['a'] && player.x > 0) player.x -= playerSpeed;
-    if (keys['d'] && player.x < WIDTH - PLAYER_SIZE) player.x += playerSpeed;
-
-    // Prevent player from going out of bounds
-    if (player.x < 0) player.x = 0;
-    if (player.x > WIDTH - PLAYER_SIZE) player.x = WIDTH - PLAYER_SIZE;
-    if (player.y < 0) player.y = 0;
-    if (player.y > HEIGHT - PLAYER_SIZE) player.y = HEIGHT - PLAYER_SIZE;
-
-    // Update bullets
-    bullets.forEach(bullet => {
-        bullet.x += bullet.dx;
-        bullet.y += bullet.dy;
-    });
-
-    bullets = bullets.filter(bullet => bullet.x > 0 && bullet.x < WIDTH && bullet.y > 0 && bullet.y < HEIGHT);
-
-    // Update enemies
-    enemies.forEach(enemy => {
-        let dx = player.x - enemy.x;
-        let dy = player.y - enemy.y;
-        let dist = Math.sqrt(dx * dx + dy * dy);
-        dx /= dist;
-        dy /= dist;
-        enemy.x += dx * enemySpeed;
-        enemy.y += dy * enemySpeed;
-    });
-
-    // Collision detection for bullets and enemies
-    bullets.forEach(bullet => {
-        enemies.forEach((enemy, index) => {
-            if (
-                bullet.x < enemy.x + ENEMY_SIZE &&
-                bullet.x + BULLET_SIZE > enemy.x &&
-                bullet.y < enemy.y + ENEMY_SIZE &&
-                bullet.y + BULLET_SIZE > enemy.y
-            ) {
-                enemies.splice(index, 1);
-                bullet.toRemove = true;
-                score += 10; // Increase score
-                currency += 5; // Increase currency
-                document.getElementById('score').textContent = `Score: ${score}`;
-                document.getElementById('currency').textContent = `Currency: ${currency}`;
-            }
-        });
-    });
-
-    bullets = bullets.filter(bullet => !bullet.toRemove);
-
-    // Collision detection for enemies and player
-    enemies.forEach((enemy, index) => {
-        if (
-            player.x < enemy.x + ENEMY_SIZE &&
-            player.x + PLAYER_SIZE > enemy.x &&
-            player.y < enemy.y + ENEMY_SIZE &&
-            player.y + PLAYER_SIZE > enemy.y
-        ) {
-            // Reduce player's health
-            player.hp -= DAMAGE_AMOUNT;
-            document.getElementById('health').textContent = `HP: ${player.hp}`;
-
-            // Remove the enemy
-            enemies.splice(index, 1);
-
-            if (player.hp <= 0) {
-                endGame();
-            }
-        }
-    });
-}
-
-function draw() {
-    if (gameOver || gamePaused) return;
-
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
-
-    // Draw player
-    ctx.fillStyle = player.color;
+// Function to draw the player
+function drawPlayer() {
+    ctx.fillStyle = 'blue';
     ctx.fillRect(player.x, player.y, player.width, player.height);
+}
 
-    // Draw bullets
+// Function to draw bullets
+function drawBullets() {
+    ctx.fillStyle = 'green';
     bullets.forEach(bullet => {
-        ctx.fillStyle = 'yellow';
         ctx.fillRect(bullet.x, bullet.y, BULLET_SIZE, BULLET_SIZE);
     });
+}
 
-    // Draw enemies
+// Function to draw enemies
+function drawEnemies() {
+    ctx.fillStyle = 'red';
     enemies.forEach(enemy => {
-        ctx.fillStyle = enemy.color;
         ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
     });
 }
 
-function gameLoop() {
-    if (gamePaused) return;
-
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
-}
-
-function spawnEnemies() {
-    enemies = [];
-    const enemyCount = 5 + wave * 3; // Increase number of enemies per wave
-    for (let i = 0; i < enemyCount; i++) {
-        enemies.push(createEnemy());
+// Function to update the player's position
+function updatePlayer() {
+    if (keys['a'] && player.x > 0) {
+        player.x -= player.speed;
+    }
+    if (keys['d'] && player.x + player.width < canvas.width) {
+        player.x += player.speed;
+    }
+    if (keys['w'] && player.y > 0) {
+        player.y -= player.speed;
+    }
+    if (keys['s'] && player.y + player.height < canvas.height) {
+        player.y += player.speed;
     }
 }
 
-const keys = {};
-document.addEventListener('keydown', (e) => {
-    keys[e.key] = true;
-});
-document.addEventListener('keyup', (e) => {
-    keys[e.key] = false;
-});
+// Function to update the bullets' positions
+function updateBullets() {
+    bullets = bullets.filter(bullet => bullet.y > 0);
+    bullets.forEach(bullet => {
+        bullet.y -= BASE_BULLET_SPEED;
+    });
+}
 
-document.addEventListener('mousedown', () => {
-    if (gamePaused) return;
+// Function to update the enemies' positions
+function updateEnemies() {
+    enemies.forEach(enemy => {
+        // Calculate direction vector from enemy to player
+        const dx = player.x - enemy.x;
+        const dy = player.y - enemy.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
 
+        // Normalize direction and move the enemy towards the player
+        enemy.x += (dx / distance) * BASE_ENEMY_SPEED;
+        enemy.y += (dy / distance) * BASE_ENEMY_SPEED;
+    });
+}
+
+// Function to spawn enemies at the edges of the screen
+function spawnEnemies() {
+    for (let i = 0; i < ENEMY_SPAWN_RATE * waveNumber; i++) {
+        // Randomly decide which edge to spawn the enemy on
+        const edge = Math.floor(Math.random() * 4);
+
+        let x, y;
+
+        switch (edge) {
+            case 0: // Top edge
+                x = Math.random() * canvas.width;
+                y = -ENEMY_SIZE;
+                break;
+            case 1: // Right edge
+                x = canvas.width;
+                y = Math.random() * canvas.height;
+                break;
+            case 2: // Bottom edge
+                x = Math.random() * canvas.width;
+                y = canvas.height;
+                break;
+            case 3: // Left edge
+                x = -ENEMY_SIZE;
+                y = Math.random() * canvas.height;
+                break;
+        }
+
+        enemies.push({
+            x: x,
+            y: y,
+            width: ENEMY_SIZE,
+            height: ENEMY_SIZE
+        });
+    }
+}
+
+// Handle shooting
+function shoot() {
     const now = Date.now();
-    if (now - lastFireTime > (shotgunPurchased ? FIRE_RATE * 1.5 : FIRE_RATE)) {
-        lastFireTime = now;
-        if (shotgunPurchased) {
-            const spreadAngle = Math.PI / 4; // 45 degrees
-            const numOfBullets = 5;
-            for (let i = 0; i < numOfBullets; i++) {
-                const angle = (i - (numOfBullets - 1) / 2) * (spreadAngle / (numOfBullets - 1));
-                const dx = mouse.x - (player.x + PLAYER_SIZE / 2);
-                const dy = mouse.y - (player.y + PLAYER_SIZE / 2);
-                const magnitude = Math.sqrt(dx * dx + dy * dy);
+    let fireRate = playerWeapon === 'shotgun' ? SHOTGUN_FIRE_RATE : FIRE_RATE;
+
+    if (now - lastFireTime > fireRate) {
+        if (playerWeapon === 'shotgun') {
+            // Shotgun fires multiple bullets at once
+            for (let i = -1; i <= 1; i++) {
                 bullets.push({
-                    x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-                    y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-                    dx: ((dx / magnitude) * bulletSpeed) * Math.cos(angle) - ((dy / magnitude) * bulletSpeed) * Math.sin(angle),
-                    dy: ((dx / magnitude) * bulletSpeed) * Math.sin(angle) + ((dy / magnitude) * bulletSpeed) * Math.cos(angle)
+                    x: player.x + player.width / 2 - BULLET_SIZE / 2 + i * BULLET_SIZE * 1.5,
+                    y: player.y,
+                    width: BULLET_SIZE,
+                    height: BULLET_SIZE
                 });
             }
         } else {
-            const dx = mouse.x - (player.x + PLAYER_SIZE / 2);
-            const dy = mouse.y - (player.y + PLAYER_SIZE / 2);
-            const magnitude = Math.sqrt(dx * dx + dy * dy);
+            // Pistol fires a single bullet
             bullets.push({
-                x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-                y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-                dx: (dx / magnitude) * bulletSpeed,
-                dy: (dy / magnitude) * bulletSpeed
+                x: player.x + player.width / 2 - BULLET_SIZE / 2,
+                y: player.y,
+                width: BULLET_SIZE,
+                height: BULLET_SIZE
             });
         }
+        lastFireTime = now;
+    }
+}
+
+// Function to open the shop
+function openShop() {
+    // Display the shop menu (this can be a simple alert for now)
+    const choice = prompt(`Shop:\n1. Shotgun - ${shopItems.shotgun.cost} coins\n2. Heal - ${shopItems.heal.cost} coins\nYour Coins: ${playerCoins}\nEnter the number of the item you want to buy:`, "");
+
+    if (choice === '1' && playerCoins >= shopItems.shotgun.cost) {
+        playerCoins -= shopItems.shotgun.cost;
+        playerWeapon = 'shotgun';
+        alert("You bought a shotgun!");
+    } else if (choice === '2' && playerCoins >= shopItems.heal.cost) {
+        playerCoins -= shopItems.heal.cost;
+        player.hp = Math.min(player.hp + shopItems.heal.healAmount, playerHp);
+        alert("You healed yourself!");
+    } else {
+        alert("Not enough coins or invalid choice.");
+    }
+}
+
+// Track pressed keys
+let keys = {};
+window.addEventListener('keydown', (e) => {
+    keys[e.key] = true;
+    if (e.key === ' ') {
+        shoot();
+    }
+    if (e.key === 'Enter') {
+        openShop(); // Press 'Enter' to open the shop
     }
 });
-
-canvas.addEventListener('mousemove', (e) => {
-    mouse = {
-        x: e.clientX,
-        y: e.clientY
-    };
+window.addEventListener('keyup', (e) => {
+    keys[e.key] = false;
 });
 
-function checkWaveComplete() {
-    if (enemies.length === 0) {
-        wave++;
+// Main game loop
+function gameLoop() {
+    clearCanvas();     // Clear the canvas
+    updatePlayer();    // Update player's position
+    updateBullets();   // Update bullets' positions
+    updateEnemies();   // Update enemies' positions
+    drawPlayer();      // Draw the player
+    drawBullets();     // Draw bullets
+    drawEnemies();     // Draw enemies
+
+    requestAnimationFrame(gameLoop);  // Call gameLoop again
+}
+
+// Start the game with the first wave
+function startGame() {
+    spawnEnemies(); // Spawn the first wave of enemies
+    gameLoop();     // Start the game loop
+}
+
+// Increase the wave number and spawn new enemies after a short delay
+function nextWave() {
+    waveNumber++;
+    playerCoins += 50 * waveNumber; // Reward the player with coins after each wave
+    setTimeout(() => {
         spawnEnemies();
-        spawnRate = Math.max(1000, spawnRate - 100); // Increase spawn rate
-    }
+    }, 1000); // Delay between waves
 }
 
-function endGame() {
-    gameOver = true;
-    document.getElementById('gameOver').style.display = 'block';
-    document.getElementById('score').style.display = 'none';
-    document.getElementById('health').style.display = 'none';
-    document.getElementById('currency').style.display = 'none';
-    hideShop(); // Hide shop when game is over
-}
-
-function buyHealthUpgrade
+// Start the game
+startGame();
