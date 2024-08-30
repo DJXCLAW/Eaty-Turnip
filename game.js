@@ -36,12 +36,14 @@ let bullets = [];
 let enemies = [];
 let lastFireTime = 0;
 let score = 0;
-let wave = 0;  // Wave variable declaration
+let wave = 0;
 let spawnRate = 3000; // milliseconds
 let currency = INITIAL_CURRENCY;
 let bulletSpeed = BASE_BULLET_SPEED;
 let playerSpeed = BASE_PLAYER_SPEED;
 let enemySpeed = BASE_ENEMY_SPEED;
+let gameOver = false;
+let mouse = { x: 0, y: 0 };
 
 // Initialize wave display
 document.getElementById('wave').textContent = `Wave: ${wave}`;
@@ -129,29 +131,6 @@ function update() {
             }
         }
     });
-}
-
-
-    // Collision detection for bullets and enemies
-    bullets.forEach(bullet => {
-        enemies.forEach((enemy, index) => {
-            if (
-                bullet.x < enemy.x + ENEMY_SIZE &&
-                bullet.x + BULLET_SIZE > enemy.x &&
-                bullet.y < enemy.y + ENEMY_SIZE &&
-                bullet.y + BULLET_SIZE > enemy.y
-            ) {
-                enemies.splice(index, 1);
-                bullet.toRemove = true;
-                score += 10; // Increase score
-                currency += 5; // Increase currency
-                document.getElementById('score').textContent = `Score: ${score}`;
-                document.getElementById('currency').textContent = `Currency: ${currency}`;
-            }
-        });
-    });
-
-    bullets = bullets.filter(bullet => !bullet.toRemove);
 
     checkWaveComplete();
 }
@@ -263,57 +242,4 @@ function buyHealthUpgrade() {
         player.hp = Math.min(player.hp + 50, PLAYER_MAX_HP);
         currency -= 50;
         document.getElementById('health').textContent = `HP: ${player.hp}`;
-        document.getElementById('currency').textContent = `Currency: ${currency}`;
-    }
-}
-
-function buyBulletSpeedUpgrade() {
-    if (currency >= 20) {
-        bulletSpeed += 2;
-        currency -= 20;
-        document.getElementById('currency').textContent = `Currency: ${currency}`;
-    }
-}
-
-function buyPlayerSpeedUpgrade() {
-    if (currency >= 30) {
-        playerSpeed += 2;
-        currency -= 30;
-        document.getElementById('currency').textContent = `Currency: ${currency}`;
-    }
-}
-
-function buyShotgun() {
-    console.log(`Currency before purchase: ${currency}`);
-    if (currency >= SHOTGUN_COST && !hasShotgun) {
-        hasShotgun = true;
-        currency -= SHOTGUN_COST;
-        document.getElementById('currency').textContent = `Currency: ${currency}`;
-        alert('Shotgun purchased! It has a slower cooldown but shoots a spread.');
-    } else if (hasShotgun) {
-        alert('You already have the shotgun!');
-    } else {
-        alert('Not enough currency to buy the shotgun.');
-    }
-    console.log(`Currency after purchase: ${currency}`);
-}
-
-
-function showShop() {
-    if (gameOver) return;
-    document.getElementById('shop').style.display = 'block';
-}
-
-function hideShop() {
-    document.getElementById('shop').style.display = 'none';
-}
-
-setInterval(checkWaveComplete, 1000); // Check if wave is complete every second
-
-let gameOver = false;
-spawnEnemies(); // Initial wave
-
-gameLoop();
-
-// Show shop when the player starts the game
-showShop();
+        document.getElementById('currency').textContent = `
