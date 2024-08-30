@@ -15,6 +15,8 @@ const PLAYER_MAX_HP = 100;
 const DAMAGE_AMOUNT = 10; // Damage per enemy collision
 const INITIAL_CURRENCY = 0;
 
+document.getElementById('wave').textContent = `Wave: ${wave}`; // Initialize wave display
+
 let player = {
     x: WIDTH / 2,
     y: HEIGHT / 2,
@@ -190,8 +192,10 @@ function checkWaveComplete() {
         wave++;
         spawnEnemies();
         spawnRate = Math.max(1000, spawnRate - 100); // Increase spawn rate
+        document.getElementById('wave').textContent = `Wave: ${wave}`; // Update wave display
     }
 }
+
 
 function endGame() {
     gameOver = true;
