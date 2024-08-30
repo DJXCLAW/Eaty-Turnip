@@ -38,6 +38,7 @@ let enemySpeed = BASE_ENEMY_SPEED;
 
 let gameOver = false;
 let gamePaused = false;
+let animationFrameId = null; // Track the animation frame
 
 function createEnemy() {
     return {
@@ -145,8 +146,8 @@ function draw() {
 function gameLoop() {
     update();
     draw();
-    if (!gamePaused) {
-        requestAnimationFrame(gameLoop);
+    if (!gameOver) {
+        animationFrameId = requestAnimationFrame(gameLoop);
     }
 }
 
@@ -214,6 +215,7 @@ function startGame() {
 function showShop() {
     gamePaused = true;
     document.getElementById('shop').style.display = 'block';
+    cancelAnimationFrame(animationFrameId); // Stop the game loop
 }
 
 function hideShop() {
