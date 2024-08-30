@@ -1,3 +1,12 @@
+Your JavaScript code is mostly correct, but there are a few issues to address:
+
+1. **Duplicated Function Name**: The `gamePaused` function should be renamed to avoid conflicts with the `gamePaused` variable.
+2. **Game Loop Restart**: Ensure that the game loop restarts correctly after pausing and resuming.
+3. **Shotgun Spread Calculation**: Adjust the shotgun spread calculation to ensure bullets are correctly spread.
+
+Here’s the corrected JavaScript code:
+
+```javascript
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -249,44 +258,4 @@ function buyBulletSpeedUpgrade() {
 
 function buyPlayerSpeedUpgrade() {
     if (currency >= 30) {
-        playerSpeed += 2;
-        currency -= 30;
-        document.getElementById('currency').textContent = `Currency: ${currency}`;
-    }
-}
-
-function buyShotgun() {
-    if (currency >= 100 && !shotgunPurchased) {
-        shotgunPurchased = true;
-        currency -= 100;
-        document.getElementById('currency').textContent = `Currency: ${currency}`;
-        document.querySelector('.shop-item:nth-child(4) span').textContent = 'Purchased';
-    }
-}
-
-function showShop() {
-    gamePaused = true;
-    document.getElementById('shopContainer').style.display = 'flex';
-}
-
-function hideShop() {
-    gamePaused = false;
-    document.getElementById('shopContainer').style.display = 'none';
-    gameLoop(); // Restart the game loop
-}
-
-function gamePaused() {
-    gamePaused = true;
-}
-
-function gameResumed() {
-    gamePaused = false;
-}
-
-setInterval(checkWaveComplete, 1000); // Check if wave is complete every second
-
-let gameOver = false;
-spawnEnemies(); // Initial wave
-
-gameLoop();
-
+        playerSpeed
