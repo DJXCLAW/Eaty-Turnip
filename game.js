@@ -51,7 +51,7 @@ function createEnemy() {
 }
 
 function update() {
-    if (gameOver || gamePaused) return;
+    if (gameOver || gamePaused) return;  // Halt all updates if the game is over or paused
 
     // Update player
     if (keys['w'] && player.y > 0) player.y -= playerSpeed;
@@ -122,7 +122,7 @@ function update() {
 }
 
 function draw() {
-    if (gameOver || gamePaused) return;
+    if (gameOver || gamePaused) return;  // Halt all drawing if the game is over or paused
 
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
@@ -146,8 +146,8 @@ function draw() {
 function gameLoop() {
     update();
     draw();
-    if (!gameOver) {
-        animationFrameId = requestAnimationFrame(gameLoop);
+    if (!gameOver && !gamePaused) {
+        animationFrameId = requestAnimationFrame(gameLoop);  // Only continue the loop if not paused or game over
     }
 }
 
@@ -168,7 +168,7 @@ document.addEventListener('keyup', (e) => {
 });
 
 document.addEventListener('mousedown', () => {
-    if (gamePaused) return;
+    if (gamePaused || gameOver) return;  // Prevent shooting when game is paused or over
 
     const now = Date.now();
     if (now - lastFireTime > FIRE_RATE) {
@@ -177,10 +177,10 @@ document.addEventListener('mousedown', () => {
         const dy = mouse.y - (player.y + PLAYER_SIZE / 2);
         const magnitude = Math.sqrt(dx * dx + dy * dy); // Calculate magnitude
         bullets.push({
-            x: player.x + PLAYER_SIZE / 2,
-            y: player.y + PLAYER_SIZE / 2,
-            dx: (dx / magnitude) * bulletSpeed, // Normalize dx and dy
-            dy: (dy / magnitude) * bulletSpeed // Normalize dx and dy
+            x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+            y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+            dx: (dx / magnitude) * bulletSpeed, // Bullet speed in x direction
+            dy: (dy / magnitude) * bulletSpeed  // Bullet speed in y direction
         });
     }
 });
@@ -213,15 +213,15 @@ function startGame() {
 }
 
 function showShop() {
-    gamePaused = true;
+    gamePaused = true;  // Pause the game when the shop is shown
     document.getElementById('shop').style.display = 'block';
-    cancelAnimationFrame(animationFrameId); // Stop the game loop
+    cancelAnimationFrame(animationFrameId);  // Stop the game loop
 }
 
 function hideShop() {
-    gamePaused = false;
+    gamePaused = false;  // Unpause the game when the shop is hidden
     document.getElementById('shop').style.display = 'none';
-    gameLoop(); // Resume the game loop
+    gameLoop();  // Resume the game loop
 }
 
 function buyHealthUpgrade() {
