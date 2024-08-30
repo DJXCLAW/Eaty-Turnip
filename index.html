@@ -13,7 +13,7 @@
         canvas {
             display: block;
         }
-        #score, #health, #currency, #wave, #gameOver, #shop {
+        #score, #health, #currency, #gameOver {
             position: absolute;
             color: white;
             font-size: 20px;
@@ -30,43 +30,38 @@
             left: 10px;
             top: 70px;
         }
-        #wave {
-            left: 10px;
-            top: 100px;
-        }
         #gameOver {
             display: none;
-            top: 150px;
+            top: 100px;
             left: 10px;
             font-size: 30px;
             color: red;
         }
-        #shop {
+        #shopContainer {
             display: none;
-            top: 200px;
-            left: 10px;
-            font-size: 18px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            color: black;
+            font-size: 24px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
         .shop-item {
-            margin-bottom: 10px;
+            margin: 20px 0;
         }
         .shop-button {
             margin-left: 10px;
-        }
-        #showShopButton {
-            position: absolute;
-            top: 10px;
-            right: 10px;
+            padding: 10px 20px;
             font-size: 18px;
-            padding: 10px;
-            background-color: #555;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        }
+        .shop-title {
+            font-size: 36px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -74,16 +69,15 @@
     <div id="score">Score: 0</div>
     <div id="health">HP: 100</div>
     <div id="currency">Currency: 0</div>
-    <div id="wave">Wave: 0</div>
     <div id="gameOver">Game Over</div>
-    <div id="shop">
-        <div class="shop-item">Increase HP (+50) <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button></div>
-        <div class="shop-item">Increase Bullet Speed (+2) <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button></div>
-        <div class="shop-item">Increase Player Speed (+2) <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button></div>
-        <div class="shop-item">Buy Shotgun (100 Currency) <button class="shop-button" onclick="buyShotgun()">Buy</button></div>
+    <div id="shopContainer">
+        <div class="shop-title">Shop</div>
+        <div class="shop-item">Increase HP (+50) - 50 Currency <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button></div>
+        <div class="shop-item">Increase Bullet Speed (+2) - 20 Currency <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button></div>
+        <div class="shop-item">Increase Player Speed (+2) - 30 Currency <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button></div>
+        <div class="shop-item">Buy Shotgun - 100 Currency <button class="shop-button" onclick="buyShotgun()">Buy</button></div>
         <button class="shop-button" onclick="hideShop()">Close Shop</button>
     </div>
-    <button id="showShopButton" onclick="showShop()">Show Shop</button>
     <canvas id="gameCanvas"></canvas>
     <script src="game.js"></script>
 </body>
