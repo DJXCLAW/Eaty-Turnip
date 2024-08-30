@@ -10,12 +10,9 @@
             overflow: hidden;
             background-color: #000;
         }
-       canvas {
-    display: block;
-    width: 100vw;
-    height: 100vh;
-}
-
+        canvas {
+            display: block;
+        }
         #score, #health, #currency, #wave, #gameOver, #shop {
             position: absolute;
             color: white;
@@ -49,6 +46,9 @@
             top: 200px;
             left: 10px;
             font-size: 18px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
         }
         .shop-item {
             margin-bottom: 10px;
@@ -56,20 +56,34 @@
         .shop-button {
             margin-left: 10px;
         }
+        #showShopButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            padding: 10px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div id="score">Score: 0</div>
     <div id="health">HP: 100</div>
     <div id="currency">Currency: 0</div>
-    <div id="wave">Wave: 0</div> <!-- Added wave tracker -->
+    <div id="wave">Wave: 0</div>
     <div id="gameOver">Game Over</div>
     <div id="shop">
         <div class="shop-item">Increase HP (+50) <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button></div>
         <div class="shop-item">Increase Bullet Speed (+2) <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button></div>
         <div class="shop-item">Increase Player Speed (+2) <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button></div>
-        <div class="shop-item">Buy Shotgun <button class="shop-button" onclick="buyShotgun()">Buy</button></div> <!-- Added shotgun purchase option -->
+        <div class="shop-item">Buy Shotgun (100 Currency) <button class="shop-button" onclick="buyShotgun()">Buy</button></div>
+        <button class="shop-button" onclick="hideShop()">Close Shop</button>
     </div>
+    <button id="showShopButton" onclick="showShop()">Show Shop</button>
     <canvas id="gameCanvas"></canvas>
     <script src="game.js"></script>
 </body>
