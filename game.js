@@ -274,3 +274,98 @@ function buyShotgun() {
 // Start the game
 spawnEnemies();
 gameLoop();
+
+// Global variable to control game pause
+let isPaused = false;
+
+// Show the shop and pause the game
+function showShop() {
+    if (!gameOver) {
+        document.getElementById('shop').style.display = 'block';
+        isPaused = true;
+        document.getElementById('showShopButton').style.display = 'none'; // Hide the show shop button
+    }
+}
+
+// Hide the shop and resume the game
+function hideShop() {
+    document.getElementById('shop').style.display = 'none';
+    isPaused = false;
+    document.getElementById('showShopButton').style.display = 'block'; // Show the show shop button
+}
+
+// Update the game logic
+function update() {
+    if (gameOver || isPaused) return; // Skip updating if game is paused
+
+    // Update player
+    if (keys['w']) player.y = Math.max(0, player.y - playerSpeed);
+    if (keys['s']) player.y = Math.min(HEIGHT - PLAYER_SIZE, player.y + playerSpeed);
+    if (keys['a']) player.x = Math.max(0, player.x - playerSpeed);
+    if (keys['d']) player.x = Math.min(WIDTH - PLAYER_SIZE, player.x + playerSpeed);
+
+    // Update bullets
+    bullets.forEach(bullet => {
+        bullet.x += bullet.dx;
+        bullet.y += bullet.dy;
+    });
+
+    bullets = bullets.filter(bullet => bullet.x > 0 && bullet.x < WIDTH && bullet.y > 0 && bullet.y < HEIGHT);
+
+    // Update enemies
+    enemies.forEach(enemy => {
+        let dx = player.x - enemy.x;
+        let dy = player.y - enemy.y;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+        dx /= dist;
+        dy /= dist;
+        enemy.x += dx * enemySpeed;
+        enemy.y += dy * enemySpeed;
+
+        // Ensure enemies stay within bounds
+        enemy.x = Math.max(0, Math.min(WIDTH - ENEMY_SIZE, enemy.x));
+        enemy.y = Math.max(0, Math.min(HEIGHT - ENEMY_SIZE, enemy.y));
+    });
+
+    // Collision detection for bullets and enemies
+    bullets.forEach(bullet => {
+        enemies.forEach((enemy, index) => {
+            if (
+                bullet.x < enemy.x + ENEMY_SIZE &&
+                bullet.x + BULLET_SIZE > enemy.x &&
+                bullet.y < enemy.y + ENEMY_SIZE &&
+                bullet.y + BULLET_SIZE > enemy.y
+            ) {
+                enemies.splice(index, 1);
+                bullet.toRemove = true;
+                score += 10; // Increase score
+                currency += 5; // Increase currency
+                document.getElementById('score').textContent = `Score: ${score}`;
+                document.getElementById('currency').textContent = `Currency: ${currency}`;
+            }
+        });
+    });
+
+    bullets = bullets.filter(bullet => !bullet.toRemove);
+
+    // Collision detection for enemies and player
+    enemies.forEach((enemy, index) => {
+        if (
+            player.x < enemy.x + ENEMY_SIZE &&
+            player.x + PLAYER_SIZE > enemy.x &&
+            player.y < enemy.y + ENEMY_SIZE &&
+            player.y + PLAYER_SIZE > enemy.y
+        ) {
+            // Reduce player's health
+            player.hp -= DAMAGE_AMOUNT;
+            document.getElementById('health').textContent = `HP: ${player.hp}`;
+
+            // Remove the enemy
+            enemies.splice(index, 1);
+
+            if (player.hp <= 0) {
+                endGame();
+            }
+        }
+    });
+}
