@@ -257,6 +257,7 @@ function buyPlayerSpeedUpgrade() {
 }
 
 function buyShotgun() {
+    console.log(`Currency before purchase: ${currency}`);
     if (currency >= SHOTGUN_COST && !hasShotgun) {
         hasShotgun = true;
         currency -= SHOTGUN_COST;
@@ -267,7 +268,9 @@ function buyShotgun() {
     } else {
         alert('Not enough currency to buy the shotgun.');
     }
+    console.log(`Currency after purchase: ${currency}`);
 }
+
 
 function showShop() {
     if (gameOver) return;
