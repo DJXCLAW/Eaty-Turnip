@@ -53,11 +53,17 @@ function createEnemy() {
 function update() {
     if (gameOver || gamePaused) return;  // Halt all updates if the game is over or paused
 
-    // Update player
+    // Update player movement with boundary checks
     if (keys['w'] && player.y > 0) player.y -= playerSpeed;
     if (keys['s'] && player.y < HEIGHT - PLAYER_SIZE) player.y += playerSpeed;
     if (keys['a'] && player.x > 0) player.x -= playerSpeed;
     if (keys['d'] && player.x < WIDTH - PLAYER_SIZE) player.x += playerSpeed;
+
+    // Ensure the player does not move out of bounds
+    if (player.x < 0) player.x = 0;
+    if (player.x > WIDTH - PLAYER_SIZE) player.x = WIDTH - PLAYER_SIZE;
+    if (player.y < 0) player.y = 0;
+    if (player.y > HEIGHT - PLAYER_SIZE) player.y = HEIGHT - PLAYER_SIZE;
 
     // Update bullets
     bullets.forEach(bullet => {
@@ -121,6 +127,9 @@ function update() {
     });
 }
 
+ // Update player
+    if (keys['w'] && player.y > 0) player.y -= playerSpeed;
+   
 function draw() {
     if (gameOver || gamePaused) return;  // Halt all drawing if the game is over or paused
 
