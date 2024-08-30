@@ -15,6 +15,8 @@ const PLAYER_MAX_HP = 100;
 const DAMAGE_AMOUNT = 10; // Damage per enemy collision
 const INITIAL_CURRENCY = 0;
 
+let gamePaused = false;
+let shotgunPurchased = false;
 let player = {
     x: WIDTH / 2,
     y: HEIGHT / 2,
@@ -36,10 +38,6 @@ let bulletSpeed = BASE_BULLET_SPEED;
 let playerSpeed = BASE_PLAYER_SPEED;
 let enemySpeed = BASE_ENEMY_SPEED;
 
-let gameOver = false;
-let gamePaused = false;
-let animationFrameId = null; // Track the animation frame
-
 function createEnemy() {
     return {
         x: Math.random() * WIDTH,
@@ -51,15 +49,15 @@ function createEnemy() {
 }
 
 function update() {
-    if (gameOver || gamePaused) return;  // Halt all updates if the game is over or paused
+    if (gameOver || gamePaused) return;
 
-    // Update player movement with boundary checks
+    // Update player
     if (keys['w'] && player.y > 0) player.y -= playerSpeed;
     if (keys['s'] && player.y < HEIGHT - PLAYER_SIZE) player.y += playerSpeed;
     if (keys['a'] && player.x > 0) player.x -= playerSpeed;
     if (keys['d'] && player.x < WIDTH - PLAYER_SIZE) player.x += playerSpeed;
 
-    // Ensure the player does not move out of bounds
+    // Prevent player from going out of bounds
     if (player.x < 0) player.x = 0;
     if (player.x > WIDTH - PLAYER_SIZE) player.x = WIDTH - PLAYER_SIZE;
     if (player.y < 0) player.y = 0;
@@ -127,11 +125,8 @@ function update() {
     });
 }
 
- // Update player
-    if (keys['w'] && player.y > 0) player.y -= playerSpeed;
-   
 function draw() {
-    if (gameOver || gamePaused) return;  // Halt all drawing if the game is over or paused
+    if (gameOver || gamePaused) return;
 
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
@@ -153,11 +148,11 @@ function draw() {
 }
 
 function gameLoop() {
+    if (gamePaused) return;
+
     update();
     draw();
-    if (!gameOver && !gamePaused) {
-        animationFrameId = requestAnimationFrame(gameLoop);  // Only continue the loop if not paused or game over
-    }
+    requestAnimationFrame(gameLoop);
 }
 
 function spawnEnemies() {
@@ -177,65 +172,67 @@ document.addEventListener('keyup', (e) => {
 });
 
 document.addEventListener('mousedown', () => {
-    if (gamePaused || gameOver) return;  // Prevent shooting when game is paused or over
+    if (gamePaused) return;
 
     const now = Date.now();
-    if (now - lastFireTime > FIRE_RATE) {
+    if (now - lastFireTime > (shotgunPurchased ? FIRE_RATE * 1.5 : FIRE_RATE)) {
         lastFireTime = now;
-        const dx = mouse.x - (player.x + PLAYER_SIZE / 2);
-        const dy = mouse.y - (player.y + PLAYER_SIZE / 2);
-        const magnitude = Math.sqrt(dx * dx + dy * dy); // Calculate magnitude
-        bullets.push({
-            x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-            y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-            dx: (dx / magnitude) * bulletSpeed, // Bullet speed in x direction
-            dy: (dy / magnitude) * bulletSpeed  // Bullet speed in y direction
-        });
+        if (shotgunPurchased) {
+            const spreadAngle = Math.PI / 4; // 45 degrees
+            const numOfBullets = 5;
+            for (let i = 0; i < numOfBullets; i++) {
+                const angle = (i - (numOfBullets - 1) / 2) * (spreadAngle / (numOfBullets - 1));
+                const dx = mouse.x - (player.x + PLAYER_SIZE / 2);
+                const dy = mouse.y - (player.y + PLAYER_SIZE / 2);
+                const magnitude = Math.sqrt(dx * dx + dy * dy);
+                bullets.push({
+                    x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+                    y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+                    dx: ((dx / magnitude) * bulletSpeed) * Math.cos(angle) - ((dy / magnitude) * bulletSpeed) * Math.sin(angle),
+                    dy: ((dx / magnitude) * bulletSpeed) * Math.sin(angle) + ((dy / magnitude) * bulletSpeed) * Math.cos(angle)
+                });
+            }
+        } else {
+            const dx = mouse.x - (player.x + PLAYER_SIZE / 2);
+            const dy = mouse.y - (player.y + PLAYER_SIZE / 2);
+            const magnitude = Math.sqrt(dx * dx + dy * dy);
+            bullets.push({
+                x: player.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+                y: player.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+                dx: (dx / magnitude) * bulletSpeed,
+                dy: (dy / magnitude) * bulletSpeed
+            });
+        }
     }
 });
 
-const mouse = { x: 0, y: 0 };
 canvas.addEventListener('mousemove', (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
+    mouse = {
+        x: e.clientX,
+        y: e.clientY
+    };
 });
+
+function checkWaveComplete() {
+    if (enemies.length === 0) {
+        wave++;
+        spawnEnemies();
+        spawnRate = Math.max(1000, spawnRate - 100); // Increase spawn rate
+    }
+}
 
 function endGame() {
     gameOver = true;
     document.getElementById('gameOver').style.display = 'block';
-}
-
-function startGame() {
-    gameOver = false;
-    gamePaused = false;
-    player.hp = PLAYER_MAX_HP;
-    player.x = WIDTH / 2;
-    player.y = HEIGHT / 2;
-    score = 0;
-    currency = INITIAL_CURRENCY;
-    document.getElementById('health').textContent = `HP: ${PLAYER_MAX_HP}`;
-    document.getElementById('score').textContent = 'Score: 0';
-    document.getElementById('currency').textContent = 'Currency: 0';
-    document.getElementById('gameOver').style.display = 'none';
-    spawnEnemies();
-    gameLoop();
-}
-
-function showShop() {
-    gamePaused = true;  // Pause the game when the shop is shown
-    document.getElementById('shop').style.display = 'block';
-    cancelAnimationFrame(animationFrameId);  // Stop the game loop
-}
-
-function hideShop() {
-    gamePaused = false;  // Unpause the game when the shop is hidden
-    document.getElementById('shop').style.display = 'none';
-    gameLoop();  // Resume the game loop
+    document.getElementById('score').style.display = 'none';
+    document.getElementById('health').style.display = 'none';
+    document.getElementById('currency').style.display = 'none';
+    hideShop(); // Hide shop when game is over
 }
 
 function buyHealthUpgrade() {
     if (currency >= 50) {
-        player.hp += 50;
+        player.hp = Math.min(player.hp + 50, PLAYER_MAX_HP);
         currency -= 50;
         document.getElementById('health').textContent = `HP: ${player.hp}`;
         document.getElementById('currency').textContent = `Currency: ${currency}`;
@@ -243,28 +240,23 @@ function buyHealthUpgrade() {
 }
 
 function buyBulletSpeedUpgrade() {
-    if (currency >= 50) {
+    if (currency >= 20) {
         bulletSpeed += 2;
-        currency -= 50;
+        currency -= 20;
         document.getElementById('currency').textContent = `Currency: ${currency}`;
     }
 }
 
 function buyPlayerSpeedUpgrade() {
-    if (currency >= 50) {
+    if (currency >= 30) {
         playerSpeed += 2;
-        currency -= 50;
+        currency -= 30;
         document.getElementById('currency').textContent = `Currency: ${currency}`;
     }
 }
 
 function buyShotgun() {
-    if (currency >= 100) {
-        // Implement shotgun purchase logic
+    if (currency >= 100 && !shotgunPurchased) {
+        shotgunPurchased = true;
         currency -= 100;
         document.getElementById('currency').textContent = `Currency: ${currency}`;
-        // TODO: Implement shotgun firing mode in update loop
-    }
-}
-
-startGame();
