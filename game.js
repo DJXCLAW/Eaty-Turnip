@@ -131,6 +131,11 @@ function checkCollisions() {
             }
         });
     });
+
+    // Check if all enemies are defeated
+    if (enemies.length === 0) {
+        nextWave(); // Start the next wave
+    }
 }
 
 // Function to spawn enemies at the edges of the screen
@@ -256,6 +261,9 @@ window.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !gamePaused) {
         showShop(); // Press 'Enter' to open the shop
     }
+    if (e.key === ' ') {
+        shoot(); // Press 'Space' to shoot
+    }
 });
 window.addEventListener('keyup', (e) => {
     keys[e.key] = false;
@@ -269,41 +277,43 @@ canvas.addEventListener('mousemove', (e) => {
     player.angle = calculateAngleToMouse(mouseX, mouseY);
 });
 
-// Handle shooting on mouse click
-canvas.addEventListener('click', () => {
-    shoot();
-});
-
-// Main game loop
-function gameLoop() {
-    if (!gamePaused) {
-        clearCanvas();     // Clear the canvas
-        updatePlayer();    // Update player's position
-        updateBullets();   // Update bullets' positions
-        updateEnemies();   // Update enemies' positions
-        checkCollisions(); // Check for bullet-enemy collisions
-        drawPlayer();      // Draw the player
-        drawBullets();     // Draw bullets
-        drawEnemies();     // Draw enemies
-
-        requestAnimationFrame(gameLoop);  // Call gameLoop again
-    }
-}
-
-// Start the game with the first wave
-function startGame() {
-    spawnEnemies(); // Spawn the first wave of enemies
-    gameLoop();     // Start the game loop
-}
-
-// Increase the wave number and spawn new enemies after a short delay
+// Function to start the next wave
 function nextWave() {
     waveNumber++;
-    playerCoins += 50 * waveNumber; // Reward the player with coins after each wave
-    setTimeout(() => {
-        spawnEnemies();
-    }, 1000); // Delay between waves
+    spawnEnemies();
+    updateHUD();
+}
+
+// Function to display the shop UI
+function showShop() {
+    // Pause the game
+    gamePaused = true;
+    document.getElementById('shop').style.display = 'block';
+}
+
+// Function to close the shop UI
+function closeShop() {
+    // Resume the game
+    gamePaused = false;
+    document.getElementById('shop').style.display = 'none';
+}
+
+// Game loop
+function gameLoop() {
+    if (!gamePaused) {
+        clearCanvas();
+        updatePlayer();
+        updateBullets();
+        updateEnemies();
+        checkCollisions();
+        drawPlayer();
+        drawBullets();
+        drawEnemies();
+    }
+    requestAnimationFrame(gameLoop);
 }
 
 // Start the game
-startGame();
+spawnEnemies();
+updateHUD();
+gameLoop();
