@@ -311,7 +311,17 @@ document.addEventListener('keydown', (e) => {
     if (e.key === ' ') {
         shoot();
     }
+
+    // Check for Enter key press to toggle the shop
+    if (e.key === 'Enter') {
+        if (gamePaused) {
+            hideShop();
+        } else {
+            showShop();
+        }
+    }
 });
+
 document.addEventListener('keyup', (e) => {
     keys[e.key] = false;
 });
