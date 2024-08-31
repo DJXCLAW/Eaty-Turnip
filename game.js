@@ -31,7 +31,7 @@ let bullets = [];
 let enemies = [];
 let lastFireTime = 0;
 let waveNumber = 1; // Start at wave 1
-const FIRE_RATE = 200; // Milliseconds for pistol
+const FIRE_RATE = 250; // Milliseconds for pistol
 const SHOTGUN_FIRE_RATE = 500; // Milliseconds for shotgun
 const ENEMY_SPAWN_RATE = 5; // Number of enemies per wave
 
@@ -54,14 +54,14 @@ function drawPlayer() {
     ctx.save();
     ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
     ctx.rotate(player.angle);
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = 'saddlebrown';
     ctx.fillRect(-player.width / 2, -player.height / 2, player.width, player.height);
     ctx.restore();
 }
 
 // Function to draw bullets
 function drawBullets() {
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = 'yellow';
     bullets.forEach(bullet => {
         ctx.fillRect(bullet.x, bullet.y, BULLET_SIZE, BULLET_SIZE);
     });
@@ -216,7 +216,7 @@ function shoot() {
 function buyHealthUpgrade() {
     if (playerCoins >= 50) {
         playerCoins -= 50;
-        player.hp = Math.min(player.hp + 50, playerHp);
+        player.hp = Math.min(player.hp + 25, playerHp);
         updateHUD();
     } else {
         alert("Not enough coins!");
@@ -226,7 +226,7 @@ function buyHealthUpgrade() {
 function buyBulletSpeedUpgrade() {
     if (playerCoins >= 100) {
         playerCoins -= 100;
-        BASE_BULLET_SPEED += 2;
+        BASE_BULLET_SPEED += 1;
         updateHUD();
     } else {
         alert("Not enough coins!");
@@ -234,9 +234,9 @@ function buyBulletSpeedUpgrade() {
 }
 
 function buyPlayerSpeedUpgrade() {
-    if (playerCoins >= 100) {
+    if (playerCoins >= 200) {
         playerCoins -= 100;
-        player.speed += 2;
+        player.speed += .5;
         updateHUD();
     } else {
         alert("Not enough coins!");
@@ -244,7 +244,7 @@ function buyPlayerSpeedUpgrade() {
 }
 
 function buyShotgun() {
-    if (playerCoins >= 100) {
+    if (playerCoins >= 300) {
         playerCoins -= 100;
         playerWeapon = 'shotgun';
         document.getElementById('shotgunStatus').innerText = 'Purchased';
