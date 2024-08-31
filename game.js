@@ -38,6 +38,7 @@ const ENEMY_SPAWN_RATE = 5; // Number of enemies per wave
 
 let gamePaused = false; // Add a gamePaused variable to handle pause/resume
 let gameOver = false; // Add a gameOver variable to handle game over state
+let gameLoopRunning = false; // Track whether the game loop is running
 
 // Update the HUD elements
 function updateHUD() {
@@ -300,7 +301,6 @@ function showShop() {
 function hideShop() {
     gamePaused = false;
     document.getElementById('shopContainer').style.display = 'none';
-    gameLoop(); // Restart the game loop
 }
 
 // Event listeners
@@ -314,7 +314,7 @@ document.addEventListener('keydown', (e) => {
 
     // Check for Enter key press to toggle the shop
     if (e.key === 'Enter') {
-        if (gamePaused) {
+        if (document.getElementById('shopContainer').style.display === 'flex') {
             hideShop();
         } else {
             showShop();
@@ -332,17 +332,25 @@ canvas.addEventListener('mousemove', (e) => {
 
 // Game loop
 function gameLoop() {
-    if (!gamePaused && !gameOver) {
-        clearCanvas();
-        updatePlayer();
-        updateBullets();
-        updateEnemies();
-        checkCollisions();
-        drawPlayer();
-        drawBullets();
-        drawEnemies();
+    if (!gamePaused && !gameOver && !gameLoopRunning) {
+        gameLoopRunning = true;
+        function loop() {
+            if (!gamePaused && !gameOver) {
+                clearCanvas();
+                updatePlayer();
+                updateBullets();
+                updateEnemies();
+                checkCollisions();
+                drawPlayer();
+                drawBullets();
+                drawEnemies();
+                requestAnimationFrame(loop);
+            } else {
+                gameLoopRunning = false;
+            }
+        }
+        loop();
     }
-    requestAnimationFrame(gameLoop);
 }
 
 // Start the game
