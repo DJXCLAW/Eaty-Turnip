@@ -190,7 +190,7 @@ function shoot() {
         if (playerWeapon === 'shotgun') {
             // Shotgun fires multiple bullets at once
             for (let i = -1; i <= 1; i++) {
-                const angleOffset = (Math.PI / 3) * i; // Spread the bullets out
+                const angleOffset = (Math.PI / 12) * i; // Spread the bullets out
                 const angle = player.angle + angleOffset;
                 bullets.push({
                     x: player.x + player.width / 2,
@@ -235,8 +235,8 @@ function buyBulletSpeedUpgrade() {
 
 function buyPlayerSpeedUpgrade() {
     if (playerCoins >= 200) {
-        playerCoins -= 100;
-        player.speed += .5;
+        playerCoins -= 200;
+        player.speed += 0.2;
         updateHUD();
     } else {
         alert("Not enough coins!");
@@ -245,7 +245,7 @@ function buyPlayerSpeedUpgrade() {
 
 function buyShotgun() {
     if (playerCoins >= 300) {
-        playerCoins -= 100;
+        playerCoins -= 300;
         playerWeapon = 'shotgun';
         document.getElementById('shotgunStatus').innerText = 'Purchased';
         updateHUD();
