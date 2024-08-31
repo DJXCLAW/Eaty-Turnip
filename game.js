@@ -13,6 +13,7 @@ const BULLET_SIZE = 8;
 const BASE_PLAYER_SPEED = 5;
 const BASE_BULLET_SPEED = 8;
 const BASE_ENEMY_SPEED = 1; // Enemies move slower towards the player
+const DAMAGE_AMOUNT = 10; // Amount of damage player takes from an enemy hit
 let playerCoins = 0;
 let playerWeapon = 'pistol'; // Start with a basic pistol
 let playerHp = 100;
@@ -31,11 +32,12 @@ let bullets = [];
 let enemies = [];
 let lastFireTime = 0;
 let waveNumber = 1; // Start at wave 1
-const FIRE_RATE = 250; // Milliseconds for pistol
+const FIRE_RATE = 200; // Milliseconds for pistol
 const SHOTGUN_FIRE_RATE = 500; // Milliseconds for shotgun
 const ENEMY_SPAWN_RATE = 5; // Number of enemies per wave
 
 let gamePaused = false; // Add a gamePaused variable to handle pause/resume
+let gameOver = false; // Add a gameOver variable to handle game over state
 
 // Update the HUD elements
 function updateHUD() {
@@ -54,14 +56,14 @@ function drawPlayer() {
     ctx.save();
     ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
     ctx.rotate(player.angle);
-    ctx.fillStyle = 'saddlebrown';
+    ctx.fillStyle = 'blue';
     ctx.fillRect(-player.width / 2, -player.height / 2, player.width, player.height);
     ctx.restore();
 }
 
 // Function to draw bullets
 function drawBullets() {
-    ctx.fillStyle = 'yellow';
+    ctx.fillStyle = 'green';
     bullets.forEach(bullet => {
         ctx.fillRect(bullet.x, bullet.y, BULLET_SIZE, BULLET_SIZE);
     });
@@ -132,8 +134,28 @@ function checkCollisions() {
         });
     });
 
+    // Check for collisions between the player and enemies
+    enemies.forEach((enemy, enemyIndex) => {
+        if (player.x < enemy.x + enemy.width &&
+            player.x + player.width > enemy.x &&
+            player.y < enemy.y + enemy.height &&
+            player.y + player.height > enemy.y) {
+            // Player takes damage
+            player.hp -= DAMAGE_AMOUNT;
+            updateHUD();
+
+            // Remove the enemy after collision
+            enemies.splice(enemyIndex, 1);
+
+            // Check if the player's HP has reached zero
+            if (player.hp <= 0) {
+                endGame(); // End the game
+            }
+        }
+    });
+
     // Check if all enemies are defeated
-    if (enemies.length === 0) {
+    if (enemies.length === 0 && !gameOver) {
         nextWave(); // Start the next wave
     }
 }
@@ -190,7 +212,7 @@ function shoot() {
         if (playerWeapon === 'shotgun') {
             // Shotgun fires multiple bullets at once
             for (let i = -1; i <= 1; i++) {
-                const angleOffset = (Math.PI / 12) * i; // Spread the bullets out
+                const angleOffset = (Math.PI / 6) * i; // Spread the bullets out
                 const angle = player.angle + angleOffset;
                 bullets.push({
                     x: player.x + player.width / 2,
@@ -216,7 +238,7 @@ function shoot() {
 function buyHealthUpgrade() {
     if (playerCoins >= 50) {
         playerCoins -= 50;
-        player.hp = Math.min(player.hp + 25, playerHp);
+        player.hp = Math.min(player.hp + 50, playerHp);
         updateHUD();
     } else {
         alert("Not enough coins!");
@@ -226,7 +248,7 @@ function buyHealthUpgrade() {
 function buyBulletSpeedUpgrade() {
     if (playerCoins >= 100) {
         playerCoins -= 100;
-        BASE_BULLET_SPEED += 1;
+        BASE_BULLET_SPEED += 2;
         updateHUD();
     } else {
         alert("Not enough coins!");
@@ -234,9 +256,9 @@ function buyBulletSpeedUpgrade() {
 }
 
 function buyPlayerSpeedUpgrade() {
-    if (playerCoins >= 200) {
-        playerCoins -= 200;
-        player.speed += 0.2;
+    if (playerCoins >= 100) {
+        playerCoins -= 100;
+        player.speed += 2;
         updateHUD();
     } else {
         alert("Not enough coins!");
@@ -244,8 +266,8 @@ function buyPlayerSpeedUpgrade() {
 }
 
 function buyShotgun() {
-    if (playerCoins >= 300) {
-        playerCoins -= 300;
+    if (playerCoins >= 100) {
+        playerCoins -= 100;
         playerWeapon = 'shotgun';
         document.getElementById('shotgunStatus').innerText = 'Purchased';
         updateHUD();
@@ -254,28 +276,12 @@ function buyShotgun() {
     }
 }
 
-// Track pressed keys
-let keys = {};
-window.addEventListener('keydown', (e) => {
-    keys[e.key] = true;
-    if (e.key === 'Enter' && !gamePaused) {
-        showShop(); // Press 'Enter' to open the shop
-    }
-    if (e.key === ' ') {
-        shoot(); // Press 'Space' to shoot
-    }
-});
-window.addEventListener('keyup', (e) => {
-    keys[e.key] = false;
-});
-
-// Track mouse movement and update player angle
-canvas.addEventListener('mousemove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    player.angle = calculateAngleToMouse(mouseX, mouseY);
-});
+// Function to end the game
+function endGame() {
+    gameOver = true;
+    document.getElementById('gameOver').style.display = 'block';
+    gamePaused = true;
+}
 
 // Function to start the next wave
 function nextWave() {
@@ -286,21 +292,37 @@ function nextWave() {
 
 // Function to display the shop UI
 function showShop() {
-    // Pause the game
     gamePaused = true;
-    document.getElementById('shop').style.display = 'block';
+    document.getElementById('shopContainer').style.display = 'flex';
 }
 
 // Function to close the shop UI
-function closeShop() {
-    // Resume the game
+function hideShop() {
     gamePaused = false;
-    document.getElementById('shop').style.display = 'none';
+    document.getElementById('shopContainer').style.display = 'none';
+    gameLoop(); // Restart the game loop
 }
+
+// Event listeners
+const keys = {};
+document.addEventListener('keydown', (e) => {
+    keys[e.key] = true;
+
+    if (e.key === ' ') {
+        shoot();
+    }
+});
+document.addEventListener('keyup', (e) => {
+    keys[e.key] = false;
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    player.angle = calculateAngleToMouse(e.clientX, e.clientY);
+});
 
 // Game loop
 function gameLoop() {
-    if (!gamePaused) {
+    if (!gamePaused && !gameOver) {
         clearCanvas();
         updatePlayer();
         updateBullets();
