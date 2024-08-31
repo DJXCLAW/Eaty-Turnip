@@ -190,7 +190,7 @@ function shoot() {
         if (playerWeapon === 'shotgun') {
             // Shotgun fires multiple bullets at once
             for (let i = -1; i <= 1; i++) {
-                const angleOffset = (Math.PI / 6) * i; // Spread the bullets out
+                const angleOffset = (Math.PI / 3) * i; // Spread the bullets out
                 const angle = player.angle + angleOffset;
                 bullets.push({
                     x: player.x + player.width / 2,
