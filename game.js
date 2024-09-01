@@ -333,11 +333,26 @@ document.addEventListener('keydown', (e) => {
         } else {
             showShop();
         }
+         // Check for K key press to switch weapons
+    if (e.key === 'k') {
+        switchWeapon();
+    }
     }
 });
 
 document.addEventListener('keyup', (e) => {
     keys[e.key] = false;
+
+    // Function to switch weapons
+function switchWeapon() {
+    if (playerWeapon === 'pistol') {
+        playerWeapon = 'shotgun';
+    } else {
+        playerWeapon = 'pistol';
+    }
+    updateHUD(); // Update the HUD to reflect the new weapon
+}
+
 });
 
 canvas.addEventListener('mousemove', (e) => {
