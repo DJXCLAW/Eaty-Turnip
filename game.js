@@ -45,6 +45,7 @@ function updateHUD() {
     document.getElementById('score').innerText = `Score: ${waveNumber * 100}`;
     document.getElementById('health').innerText = `HP: ${player.hp}`;
     document.getElementById('currency').innerText = `Currency: ${playerCoins}`;
+    document.getElementById('playerWeapon').innerText = `Weapon: ${playerWeapon}`;
 }
 
 // Helper function to clear the canvas
