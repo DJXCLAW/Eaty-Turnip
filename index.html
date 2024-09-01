@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bean (rammer health fix 3.0)</title>
+    <title>bean (rammer health fix)</title>
     <style>
         body {
             margin: 0;
@@ -39,7 +39,7 @@
             color: red;
         }
         #shopContainer {
-            display: block;
+            display: none;
             position: absolute;
             top: 0;
             left: 0;
@@ -58,6 +58,12 @@
             display: inline-block;
             width: 300px;
             text-align: left;
+        }
+        #shopContainer .shop-item .description {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 10px;
+            display: block;
         }
         #shopContainer .shop-button {
             margin-left: 10px;
@@ -78,7 +84,36 @@
             font-weight: bold;
             float: right;
         }
-        
+        .resume-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .resume-button:hover {
+            background-color: #e53935;
+        }
+        .switch-weapon-button {
+            margin-top: 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .switch-weapon-button:hover {
+            background-color: #1E88E5;
+        }
     </style>
 </head>
 <body>
@@ -88,18 +123,23 @@
     <div id="gameOver">Game Over</div>
 
     <div id="shopContainer">
-        <div class="shop-item">Heal HP (+50) 
+        <div class="shop-item">
+            Heal HP (+50)
             <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button>
         </div>
-        <div class="shop-item">Increase Bullet Speed (+2) 
+        <div class="shop-item">
+            Increase Bullet Speed (+2)
             <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button>
         </div>
-        <div class="shop-item">Increase Player Speed (+2) 
+        <div class="shop-item">
+            Increase Player Speed (+2)
             <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button>
         </div>
-        <div class="shop-item">Shotgun (100) 
-            <button class="shop-button" onclick="buyShotgun()">Buy</button> 
+        <div class="shop-item">
+            Shotgun (100)
+            <button class="shop-button" onclick="buyShotgun()">Buy</button>
             <span id="shotgunStatus">Not Purchased</span>
+            <span class="description">Shoots 3 pellets that each deal 3 damage, but spread out and have a slower reload speed.</span>
         </div>
         <button class="resume-button" onclick="hideShop()">Resume Game</button>
     </div>
