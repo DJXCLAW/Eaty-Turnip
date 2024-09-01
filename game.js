@@ -125,12 +125,21 @@ function checkCollisions() {
                 bullet.x + BULLET_SIZE > enemy.x &&
                 bullet.y < enemy.y + enemy.height &&
                 bullet.y + BULLET_SIZE > enemy.y) {
-                // Remove the enemy and bullet
-                enemies.splice(enemyIndex, 1);
+
+                // Apply damage based on weapon type
+                let damage = playerWeapon === 'shotgun' ? 3 : 2;
+                enemy.health -= damage;
+
+                // Remove the bullet after it hits
                 bullets.splice(bulletIndex, 1);
-                // Increase the player's score and coins
-                playerCoins += 10;
-                updateHUD();
+
+                // If the enemy's health is 0 or below, remove it
+                if (enemy.health <= 0) {
+                    enemies.splice(enemyIndex, 1);
+                    // Increase the player's score and coins
+                    playerCoins += 10;
+                    updateHUD();
+                }
             }
         });
     });
@@ -200,6 +209,7 @@ function spawnEnemies() {
         enemies.push(enemy);
     }
 }
+
 
 // Function to calculate the angle between the player and the mouse cursor
 function calculateAngleToMouse(mouseX, mouseY) {
