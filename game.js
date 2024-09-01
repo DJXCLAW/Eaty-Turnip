@@ -14,7 +14,7 @@ const BASE_PLAYER_SPEED = 5;
 const BASE_BULLET_SPEED = 8;
 const BASE_ENEMY_SPEED = 1; // Enemies move slower towards the player
 const DAMAGE_AMOUNT = 10; // Amount of damage player takes from an enemy hit
-let playerCoins = 0;
+let playerCoins = 100000000;
 let playerWeapon = 'pistol'; // Start with a basic pistol
 let playerHp = 100;
 
