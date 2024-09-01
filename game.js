@@ -188,12 +188,16 @@ function spawnEnemies() {
                 break;
         }
 
-        enemies.push({
+        // Initialize each enemy with its own health
+        const enemy = {
             x: x,
             y: y,
             width: ENEMY_SIZE,
-            height: ENEMY_SIZE
-        });
+            height: ENEMY_SIZE,
+            health: 5 // Set the enemy's health to 5
+        };
+
+        enemies.push(enemy);
     }
 }
 
