@@ -59,6 +59,12 @@
             width: 300px;
             text-align: left;
         }
+        #shopContainer .shop-item .description {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 10px;
+            display: block;
+        }
         #shopContainer .shop-button {
             margin-left: 10px;
             background-color: #4CAF50;
@@ -94,6 +100,20 @@
         .resume-button:hover {
             background-color: #e53935;
         }
+        .switch-weapon-button {
+            margin-top: 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .switch-weapon-button:hover {
+            background-color: #1E88E5;
+        }
     </style>
 </head>
 <body>
@@ -103,18 +123,24 @@
     <div id="gameOver">Game Over</div>
 
     <div id="shopContainer">
-        <div class="shop-item">Heal HP (+50) 
+        <div class="shop-item">
+            Heal HP (+50)
             <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button>
         </div>
-        <div class="shop-item">Increase Bullet Speed (+2) 
+        <div class="shop-item">
+            Increase Bullet Speed (+2)
             <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button>
         </div>
-        <div class="shop-item">Increase Player Speed (+2) 
+        <div class="shop-item">
+            Increase Player Speed (+2)
             <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button>
         </div>
-        <div class="shop-item">Shotgun (100) 
-            <button class="shop-button" onclick="buyShotgun()">Buy</button> 
+        <div class="shop-item">
+            Shotgun (100)
+            <button class="shop-button" onclick="buyShotgun()">Buy</button>
             <span id="shotgunStatus">Not Purchased</span>
+            <span class="description">Shoots 3 pellets that each deal 3 damage, but spread out and have a slower reload speed.</span>
+            <button class="switch-weapon-button" onclick="switchWeapon()">Switch to Shotgun</button>
         </div>
         <button class="resume-button" onclick="hideShop()">Resume Game</button>
     </div>
