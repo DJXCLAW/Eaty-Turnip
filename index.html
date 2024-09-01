@@ -14,26 +14,30 @@
         canvas {
             display: block;
         }
-        #score, #health, #currency, #gameOver #playerWeapon {
-            position: absolute;
-            color: white;
-            font-size: 20px;
-            top: 10px;
-        }
-        #score {
-            left: 10px;
-        }
-        #health {
-            left: 10px;
-            top: 40px;
-        }
-        #currency {
-            left: 10px;
-            top: 70px;
-        }
-        #playerWeapon {
-  left: 10px;
-top: 90px;
+      #score, #health, #currency, #playerWeapon {
+    position: absolute;
+    color: white;
+    font-size: 20px;
+    top: 10px;
+}
+
+#score {
+    left: 10px;
+}
+
+#health {
+    left: 10px;
+    top: 40px;
+}
+
+#currency {
+    left: 10px;
+    top: 70px;
+}
+
+#playerWeapon {
+    left: 10px;
+    top: 100px; /* Adjusted to be below currency */
 }
         #gameOver {
             display: none;
