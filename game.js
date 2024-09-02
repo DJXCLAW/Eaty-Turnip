@@ -42,9 +42,9 @@ let gameLoopRunning = false; // Track whether the game loop is running
 
 // Update the HUD elements
 function updateHUD() {
-    document.getElementById('score').innerText = `Score: ${waveNumber * 100}`;
-    document.getElementById('health').innerText = `HP: ${player.hp}`;
-    document.getElementById('currency').innerText = `Currency: ${playerCoins}`;
+    document.getElementById('score').innerText = Score: ${waveNumber * 100};
+    document.getElementById('health').innerText = HP: ${player.hp};
+    document.getElementById('currency').innerText = Currency: ${playerCoins};
 }
 
 // Helper function to clear the canvas
@@ -210,6 +210,7 @@ function spawnEnemies() {
     }
 }
 
+
 // Function to calculate the angle between the player and the mouse cursor
 function calculateAngleToMouse(mouseX, mouseY) {
     const dx = mouseX - (player.x + player.width / 2);
@@ -270,9 +271,9 @@ function buyBulletSpeedUpgrade() {
 }
 
 function buyPlayerSpeedUpgrade() {
-    if (playerCoins >= 75) {
-        playerCoins -= 75;
-        player.speed += 1;
+    if (playerCoins >= 100) {
+        playerCoins -= 100;
+        player.speed += 2;
         updateHUD();
     } else {
         alert("Not enough coins!");
@@ -280,25 +281,21 @@ function buyPlayerSpeedUpgrade() {
 }
 
 function buyShotgun() {
-    if (playerCoins >= 200) {
-        playerCoins -= 200;
+    if (playerCoins >= 100) {
+        playerCoins -= 100;
         playerWeapon = 'shotgun';
+        document.getElementById('shotgunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
         alert("Not enough coins!");
     }
 }
 
-// Show the shop
-function showShop() {
-    gamePaused = true; // Pause the game when the shop is open
-    document.getElementById('shopContainer').style.display = 'flex';
-}
-
-// Hide the shop
-function hideShop() {
-    gamePaused = false; // Resume the game when the shop is closed
-    document.getElementById('shopContainer').style.display = 'none';
+// Function to end the game
+function endGame() {
+    gameOver = true;
+    document.getElementById('gameOver').style.display = 'block';
+    gamePaused = true;
 }
 
 // Function to start the next wave
@@ -308,52 +305,28 @@ function nextWave() {
     updateHUD();
 }
 
-// Function to end the game
-function endGame() {
-    gameOver = true;
-    alert('Game Over!'); // Alert the player when the game ends
-    // Additional code to handle the end of the game (e.g., show a game over screen)
+// Function to display the shop UI
+function showShop() {
+    gamePaused = true;
+    document.getElementById('shopContainer').style.display = 'flex';
 }
 
-// Main game loop
-function gameLoop() {
-    if (gamePaused || gameOver) return; // Skip the loop if the game is paused or over
-
-    clearCanvas();
-    updatePlayer();
-    updateBullets();
-    updateEnemies();
-    checkCollisions();
-    drawPlayer();
-    drawBullets();
-    drawEnemies();
-
-    requestAnimationFrame(gameLoop);
+// Function to close the shop UI
+function hideShop() {
+    gamePaused = false;
+    document.getElementById('shopContainer').style.display = 'none';
 }
 
-// Function to switch weapons
-function switchWeapon() {
-    if (playerWeapon === 'pistol') {
-        playerWeapon = 'shotgun';
-    } else if (playerWeapon === 'shotgun') {
-        playerWeapon = 'pistol';
-    }
-    updateHUD();
-
-    // Show an alert when the weapon switches
-    alert(`Weapon switched to: ${playerWeapon}`);
-}
-
-// Add event listeners for keyboard input
+// Event listeners
+const keys = {};
 document.addEventListener('keydown', (e) => {
+    keys[e.key] = true;
+
     if (e.key === ' ') {
         shoot();
     }
 
-    if (e.key === 'k') {
-        switchWeapon(); // Switch weapons when K is pressed
-    }
-
+    // Check for Enter key press to toggle the shop
     if (e.key === 'Enter') {
         if (document.getElementById('shopContainer').style.display === 'flex') {
             hideShop();
@@ -363,15 +336,38 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Handle mouse movement to aim
-document.addEventListener('mousemove', (e) => {
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-    player.angle = calculateAngleToMouse(mouseX, mouseY);
+document.addEventListener('keyup', (e) => {
+    keys[e.key] = false;
 });
 
-// Start the first wave and the game loop
+canvas.addEventListener('mousemove', (e) => {
+    player.angle = calculateAngleToMouse(e.clientX, e.clientY);
+});
+
+// Game loop
+function gameLoop() {
+    if (!gamePaused && !gameOver && !gameLoopRunning) {
+        gameLoopRunning = true;
+        function loop() {
+            if (!gamePaused && !gameOver) {
+                clearCanvas();
+                updatePlayer();
+                updateBullets();
+                updateEnemies();
+                checkCollisions();
+                drawPlayer();
+                drawBullets();
+                drawEnemies();
+                requestAnimationFrame(loop);
+            } else {
+                gameLoopRunning = false;
+            }
+        }
+        loop();
+    }
+}
+
+// Start the game
 spawnEnemies();
 updateHUD();
-gameLoopRunning = true;
-gameLoop(); // Start the game loop
+gameLoop();
