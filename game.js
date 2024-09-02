@@ -1,3 +1,5 @@
+alert("testing 1-2-3");
+
 // Get the canvas element and its 2D drawing context
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
