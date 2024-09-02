@@ -42,9 +42,9 @@ let gameLoopRunning = false; // Track whether the game loop is running
 
 // Update the HUD elements
 function updateHUD() {
-    document.getElementById('score').innerText = Score: ${waveNumber * 100};
-    document.getElementById('health').innerText = HP: ${player.hp};
-    document.getElementById('currency').innerText = Currency: ${playerCoins};
+    document.getElementById('score').innerText = `Score: ${waveNumber * 100}`;
+    document.getElementById('health').innerText = `HP: ${player.hp}`;
+    document.getElementById('currency').innerText = `Currency: ${playerCoins}`;
 }
 
 // Helper function to clear the canvas
@@ -125,21 +125,12 @@ function checkCollisions() {
                 bullet.x + BULLET_SIZE > enemy.x &&
                 bullet.y < enemy.y + enemy.height &&
                 bullet.y + BULLET_SIZE > enemy.y) {
-
-                // Apply damage based on weapon type
-                let damage = playerWeapon === 'shotgun' ? 3 : 2;
-                enemy.health -= damage;
-
-                // Remove the bullet after it hits
+                // Remove the enemy and bullet
+                enemies.splice(enemyIndex, 1);
                 bullets.splice(bulletIndex, 1);
-
-                // If the enemy's health is 0 or below, remove it
-                if (enemy.health <= 0) {
-                    enemies.splice(enemyIndex, 1);
-                    // Increase the player's score and coins
-                    playerCoins += 10;
-                    updateHUD();
-                }
+                // Increase the player's score and coins
+                playerCoins += 10;
+                updateHUD();
             }
         });
     });
@@ -197,19 +188,14 @@ function spawnEnemies() {
                 break;
         }
 
-        // Initialize each enemy with its own health
-        const enemy = {
+        enemies.push({
             x: x,
             y: y,
             width: ENEMY_SIZE,
-            height: ENEMY_SIZE,
-            health: 5 // Set the enemy's health to 5
-        };
-
-        enemies.push(enemy);
+            height: ENEMY_SIZE
+        });
     }
 }
-
 
 // Function to calculate the angle between the player and the mouse cursor
 function calculateAngleToMouse(mouseX, mouseY) {
