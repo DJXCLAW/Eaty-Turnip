@@ -78,18 +78,24 @@ function drawEnemies() {
     });
 }
 
+var up = {"w":"ArrowUp"};
+var left = {"a":"ArrowLeft"};
+var right = {"d":"ArrowRight"};
+var down = {"s":"ArrowUp"};
+
+
 // Function to update the player's position
 function updatePlayer() {
-    if (keys['a'] && player.x > 0) {
+    if (keys['left'] && player.x > 0) {
         player.x -= player.speed;
     }
-    if (keys['d'] && player.x + player.width < canvas.width) {
+    if (keys['right'] && player.x + player.width < canvas.width) {
         player.x += player.speed;
     }
-    if (keys['w'] && player.y > 0) {
+    if (keys['up'] && player.y > 0) {
         player.y -= player.speed;
     }
-    if (keys['s'] && player.y + player.height < canvas.height) {
+    if (keys['down'] && player.y + player.height < canvas.height) {
         player.y += player.speed;
     }
 }
