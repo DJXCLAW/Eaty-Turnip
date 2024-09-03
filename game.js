@@ -322,7 +322,6 @@ function hideShop() {
     gamePaused = false; // Resume the game when the shop is closed
 }
 
-// Function to buy the shotgun
 function buyShotgun() {
     if (playerCoins >= 100 && !weapons[1].purchased) { // Ensure shotgun is not already purchased
         playerCoins -= 100;
@@ -335,6 +334,7 @@ function buyShotgun() {
         alert("Not enough coins!");
     }
 }
+
 
 // Function to handle game over
 function endGame() {
