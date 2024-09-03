@@ -14,7 +14,7 @@ const BASE_PLAYER_SPEED = 5;
 const BASE_BULLET_SPEED = 8;
 const BASE_ENEMY_SPEED = 1; // Enemies move slower towards the player
 const DAMAGE_AMOUNT = 10; // Amount of damage player takes from an enemy hit
-let playerCoins = 0;
+let playerCoins = 10000;
 let playerWeapon = 'pistol'; // Start with a basic pistol
 let playerHp = 100;
 
@@ -78,11 +78,36 @@ function drawEnemies() {
     });
 }
 
-var up = {"w":"ArrowUp"};
-var left = {"a":"ArrowLeft"};
-var right = {"d":"ArrowRight"};
-var down = {"s":"ArrowUp"};
+// Map both WASD and arrow keys to the same actions
+var keyMap = {
+    "w": "up",
+    "ArrowUp": "up",
+    "a": "left",
+    "ArrowLeft": "left",
+    "s": "down",
+    "ArrowDown": "down",
+    "d": "right",
+    "ArrowRight": "right"
+};
 
+// Object to keep track of pressed keys
+var keys = {};
+
+// Listen for keydown events
+document.addEventListener('keydown', function(event) {
+    var direction = keyMap[event.key];
+    if (direction) {
+        keys[direction] = true;
+    }
+});
+
+// Listen for keyup events
+document.addEventListener('keyup', function(event) {
+    var direction = keyMap[event.key];
+    if (direction) {
+        keys[direction] = false;
+    }
+});
 
 // Function to update the player's position
 function updatePlayer() {
@@ -99,6 +124,7 @@ function updatePlayer() {
         player.y += player.speed;
     }
 }
+
 
 // Function to update the bullets' positions
 function updateBullets() {
