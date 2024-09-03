@@ -78,7 +78,7 @@ function drawEnemies() {
     });
 }
 
-// Map both WASD and arrow keys to the same actions
+// Object to map keys to directions
 var keyMap = {
     "w": "up",
     "ArrowUp": "up",
@@ -90,10 +90,15 @@ var keyMap = {
     "ArrowRight": "right"
 };
 
-// Object to keep track of pressed keys
-var keys = {};
+// Object to keep track of which keys are currently pressed
+var keys = {
+    "up": false,
+    "left": false,
+    "down": false,
+    "right": false
+};
 
-// Listen for keydown events
+// Event listener for keydown
 document.addEventListener('keydown', function(event) {
     var direction = keyMap[event.key];
     if (direction) {
@@ -101,7 +106,7 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// Listen for keyup events
+// Event listener for keyup
 document.addEventListener('keyup', function(event) {
     var direction = keyMap[event.key];
     if (direction) {
@@ -124,7 +129,6 @@ function updatePlayer() {
         player.y += player.speed;
     }
 }
-
 
 // Function to update the bullets' positions
 function updateBullets() {
