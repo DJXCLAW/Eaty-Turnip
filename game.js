@@ -73,6 +73,18 @@ function updatePlayer() {
     if (player.y < 0) player.y = 0;
     if (player.y > canvas.height) player.y = canvas.height;
 }
+function updatePlayer() {
+    if (keys['ArrowUp']) player.y -= player.speed;
+    if (keys['ArrowDown']) player.y += player.speed;
+    if (keys['ArrowLeft']) player.x -= player.speed;
+    if (keys['ArrowRight']) player.x += player.speed;
+
+    // Keep the player within the canvas bounds
+    if (player.x < 0) player.x = 0;
+    if (player.x > canvas.width) player.x = canvas.width;
+    if (player.y < 0) player.y = 0;
+    if (player.y > canvas.height) player.y = canvas.height;
+}
 
 function updateBullets() {
     bullets.forEach((bullet, index) => {
