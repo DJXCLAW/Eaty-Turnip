@@ -94,6 +94,22 @@ function updatePlayer() {
     }
 }
 
+// Function to update the player's position
+function updatePlayer() {
+    if (keys['ArrowLeft'] && player.x > 0) {
+        player.x -= player.speed;
+    }
+    if (keys['ArrowRight'] && player.x + player.width < canvas.width) {
+        player.x += player.speed;
+    }
+    if (keys['ArrowUp'] && player.y > 0) {
+        player.y -= player.speed;
+    }
+    if (keys['ArrowDown'] && player.y + player.height < canvas.height) {
+        player.y += player.speed;
+    }
+}
+
 // Function to update the bullets' positions
 function updateBullets() {
     bullets = bullets.filter(bullet => bullet.x > 0 && bullet.x < canvas.width && bullet.y > 0 && bullet.y < canvas.height);
