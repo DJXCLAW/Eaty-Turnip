@@ -40,6 +40,29 @@ let gamePaused = false; // Add a gamePaused variable to handle pause/resume
 let gameOver = false; // Add a gameOver variable to handle game over state
 let gameLoopRunning = false; // Track whether the game loop is running
 
+// Key handling
+const keys = {};
+document.addEventListener('keydown', (e) => {
+    keys[e.key] = true;
+
+    if (e.key === ' ') {
+        shoot();
+    }
+
+    // Check for Enter key press to toggle the shop
+    if (e.key === 'Enter') {
+        if (document.getElementById('shopContainer').style.display === 'flex') {
+            hideShop();
+        } else {
+            showShop();
+        }
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    keys[e.key] = false;
+});
+
 // Update the HUD elements
 function updateHUD() {
     document.getElementById('score').innerText = `Score: ${waveNumber * 100}`;
@@ -80,16 +103,16 @@ function drawEnemies() {
 
 // Function to update the player's position
 function updatePlayer() {
-    if (keys['a'] && player.x > 0) {
+    if (keys['a'] || keys['ArrowLeft'] && player.x > 0) {
         player.x -= player.speed;
     }
-    if (keys['d'] && player.x + player.width < canvas.width) {
+    if (keys['d'] || keys['ArrowRight'] && player.x + player.width < canvas.width) {
         player.x += player.speed;
     }
-    if (keys['w'] && player.y > 0) {
+    if (keys['w'] || keys['ArrowUp'] && player.y > 0) {
         player.y -= player.speed;
     }
-    if (keys['s'] && player.y + player.height < canvas.height) {
+    if (keys['s'] || keys['ArrowDown'] && player.y + player.height < canvas.height) {
         player.y += player.speed;
     }
 }
@@ -210,7 +233,6 @@ function spawnEnemies() {
     }
 }
 
-
 // Function to calculate the angle between the player and the mouse cursor
 function calculateAngleToMouse(mouseX, mouseY) {
     const dx = mouseX - (player.x + player.width / 2);
@@ -305,11 +327,6 @@ function nextWave() {
     updateHUD();
 }
 
-    // Check if all enemies are defeated
-    if (enemies.length === 0 && !gameOver) {
-        nextWave(); // Start the next wave
-    }
-
 // Function to display the shop UI
 function showShop() {
     gamePaused = true;
@@ -322,29 +339,7 @@ function hideShop() {
     document.getElementById('shopContainer').style.display = 'none';
 }
 
-// Event listeners
-const keys = {};
-document.addEventListener('keydown', (e) => {
-    keys[e.key] = true;
-
-    if (e.key === ' ') {
-        shoot();
-    }
-
-    // Check for Enter key press to toggle the shop
-    if (e.key === 'Enter') {
-        if (document.getElementById('shopContainer').style.display === 'flex') {
-            hideShop();
-        } else {
-            showShop();
-        }
-    }
-});
-
-document.addEventListener('keyup', (e) => {
-    keys[e.key] = false;
-});
-
+// Event listener for mouse movement to update player angle
 canvas.addEventListener('mousemove', (e) => {
     player.angle = calculateAngleToMouse(e.clientX, e.clientY);
 });
