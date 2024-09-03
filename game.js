@@ -305,6 +305,11 @@ function nextWave() {
     updateHUD();
 }
 
+    // Check if all enemies are defeated
+    if (enemies.length === 0 && !gameOver) {
+        nextWave(); // Start the next wave
+    }
+
 // Function to display the shop UI
 function showShop() {
     gamePaused = true;
