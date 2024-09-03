@@ -14,7 +14,7 @@ const BASE_PLAYER_SPEED = 5;
 const BASE_BULLET_SPEED = 8;
 const BASE_ENEMY_SPEED = 1; // Enemies move slower towards the player
 const DAMAGE_AMOUNT = 10; // Amount of damage player takes from an enemy hit
-let playerCoins = 10000;
+let playerCoins = 0;
 let playerWeapon = 'pistol'; // Start with a basic pistol
 let playerHp = 100;
 
@@ -78,54 +78,18 @@ function drawEnemies() {
     });
 }
 
-// Object to map keys to directions
-var keyMap = {
-    "w": "up",
-    "ArrowUp": "up",
-    "a": "left",
-    "ArrowLeft": "left",
-    "s": "down",
-    "ArrowDown": "down",
-    "d": "right",
-    "ArrowRight": "right"
-};
-
-// Object to keep track of which keys are currently pressed
-var keys = {
-    "up": false,
-    "left": false,
-    "down": false,
-    "right": false
-};
-
-// Event listener for keydown
-document.addEventListener('keydown', function(event) {
-    var direction = keyMap[event.key];
-    if (direction) {
-        keys[direction] = true;
-    }
-});
-
-// Event listener for keyup
-document.addEventListener('keyup', function(event) {
-    var direction = keyMap[event.key];
-    if (direction) {
-        keys[direction] = false;
-    }
-});
-
 // Function to update the player's position
 function updatePlayer() {
-    if (keys['left'] && player.x > 0) {
+    if (keys['a'] && player.x > 0) {
         player.x -= player.speed;
     }
-    if (keys['right'] && player.x + player.width < canvas.width) {
+    if (keys['d'] && player.x + player.width < canvas.width) {
         player.x += player.speed;
     }
-    if (keys['up'] && player.y > 0) {
+    if (keys['w'] && player.y > 0) {
         player.y -= player.speed;
     }
-    if (keys['down'] && player.y + player.height < canvas.height) {
+    if (keys['s'] && player.y + player.height < canvas.height) {
         player.y += player.speed;
     }
 }
