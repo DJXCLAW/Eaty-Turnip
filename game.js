@@ -80,32 +80,16 @@ function drawEnemies() {
 
 // Function to update the player's position
 function updatePlayer() {
-    if (keys['a'] && player.x > 0) {
+    if (keys['a', 'ArrowLeft'] && player.x > 0) {
         player.x -= player.speed;
     }
-    if (keys['d'] && player.x + player.width < canvas.width) {
+    if (keys['d', 'ArrowRight'] && player.x + player.width < canvas.width) {
         player.x += player.speed;
     }
-    if (keys['w'] && player.y > 0) {
+    if (keys['w', 'ArrowUp'] && player.y > 0) {
         player.y -= player.speed;
     }
-    if (keys['s'] && player.y + player.height < canvas.height) {
-        player.y += player.speed;
-    }
-}
-
-// Function to update the player's position
-function updatePlayer() {
-    if (keys['ArrowLeft'] && player.x > 0) {
-        player.x -= player.speed;
-    }
-    if (keys['ArrowRight'] && player.x + player.width < canvas.width) {
-        player.x += player.speed;
-    }
-    if (keys['ArrowUp'] && player.y > 0) {
-        player.y -= player.speed;
-    }
-    if (keys['ArrowDown'] && player.y + player.height < canvas.height) {
+    if (keys['s', 'ArrowDown'] && player.y + player.height < canvas.height) {
         player.y += player.speed;
     }
 }
