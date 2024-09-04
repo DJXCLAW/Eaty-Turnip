@@ -34,6 +34,7 @@ let lastFireTime = 0;
 let waveNumber = 1; // Start at wave 1
 const FIRE_RATE = 200; // Milliseconds for pistol
 const SHOTGUN_FIRE_RATE = 500; // Milliseconds for shotgun
+const MINIGUN_FIRE_RATE = 10; // Milliseconds for Minigun
 const ENEMY_SPAWN_RATE = 5; // Number of enemies per wave
 
 let gamePaused = false; // Add a gamePaused variable to handle pause/resume
@@ -259,13 +260,24 @@ function shoot() {
                     vy: Math.sin(angle) * BASE_BULLET_SPEED
                 });
             }
-        } else {
+        } if (playerWeapon === 'pistol') {
             // Pistol fires a single bullet
             bullets.push({
                 x: player.x + player.width / 2,
                 y: player.y + player.height / 2,
                 vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
                 vy: Math.sin(player.angle) * BASE_BULLET_SPEED
+            });
+        }
+        lastFireTime = now;
+    }
+    if (playerWeapon === 'Minigun') {
+            // Minigun fires a single bullet
+            bullets.push({
+                x: player.x + player.width / 2,
+                y: player.y + player.height / 2,
+                vx: Math.cos(player.angle) * MINIGUN_BULLET_SPEED,
+                vy: Math.sin(player.angle) * MINIGUN_BULLET_SPEED
             });
         }
         lastFireTime = now;
@@ -308,6 +320,17 @@ function buyShotgun() {
         playerCoins -= 100;
         playerWeapon = 'shotgun';
         document.getElementById('shotgunStatus').innerText = 'Purchased';
+        updateHUD();
+    } else {
+        alert("Not enough coins!");
+    }
+}
+
+function buyMinigun() {
+    if (playerCoins >= 500) {
+        playerCoins -= 500;
+        playerWeapon = 'Minigun';
+        document.getElementById('minigunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
         alert("Not enough coins!");
