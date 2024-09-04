@@ -18,12 +18,6 @@ let playerCoins = 0;
 let playerWeapon = 'pistol'; // Start with a basic pistol
 let playerHp = 100;
 
-// Define weapons
-const weapons = [
-    { name: 'pistol', price: 0, unlocked: true }, // Starting weapon, unlocked by default
-    { name: 'shotgun', price: 100, unlocked: false }
-];
-
 let player = {
     x: canvas.width / 2 - PLAYER_SIZE / 2,
     y: canvas.height - PLAYER_SIZE * 2,
@@ -32,7 +26,6 @@ let player = {
     speed: BASE_PLAYER_SPEED,
     hp: playerHp,
     angle: 0 // Player's rotation angle (in radians)
-    weapon: weapons[0]
 };
 
 let bullets = [];
@@ -309,33 +302,16 @@ function buyPlayerSpeedUpgrade() {
     }
 }
 
-function buyWeapon(shotgun) {
-    // Find the weapon in the weapons array
-    const weapon = weapons.find(w => w.name === shotgun);
-    
-    if (!shotgun) {
-        alert("Weapon not found!");
-        return;
-    }
-    
-    // Check if the weapon is already unlocked
-    if (shotgun.unlocked) {
-        alert(`${shotgun} is already unlocked!`);
-        return;
-    }
-    
-    // Check if the player has enough coins
-    if (playerCoins >= shotgun.price) {
-        playerCoins -= shotgun.price;
-        shotgun.unlocked = true;
-        player.weapon = shotgun; // Set the newly unlocked weapon as the current weapon
-        document.getElementById(`${shotgun}Status`).innerText = 'Purchased';
+function buyShotgun() {
+    if (playerCoins >= 100) {
+        playerCoins -= 100;
+        playerWeapon = 'shotgun';
+        document.getElementById('shotgunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
         alert("Not enough coins!");
     }
 }
-
 
 // Function to end the game
 function endGame() {
@@ -395,6 +371,5 @@ function gameLoop() {
 spawnEnemies();
 updateHUD();
 gameLoop();
-
 
 
