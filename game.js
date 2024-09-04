@@ -365,12 +365,14 @@ function buyMinigun() {
     if (playerCoins >= 500) {
         playerCoins -= 500;
         playerWeapon = 'minigun';
-        document.getElementById('MinigunStatus').innerText = 'Purchased';
+        document.getElementById('minigunStatus').innerText = 'Purchased'; // Corrected to lowercase 'minigunStatus'
         updateHUD();
     } else {
         alert("Not enough coins!");
     }
-    function buySniper() {
+}
+
+function buySniper() {
     if (playerCoins >= 300) { // Set the cost for the sniper
         playerCoins -= 300;
         playerWeapon = 'sniper';
@@ -379,8 +381,6 @@ function buyMinigun() {
     } else {
         alert("Not enough coins!");
     }
-}
-
 }
 
 // Function to end the game
@@ -416,26 +416,29 @@ canvas.addEventListener('mousemove', (e) => {
 
 // Game loop
 function gameLoop() {
-    if (!gamePaused && !gameOver && !gameLoopRunning) {
-        gameLoopRunning = true;
+    if (!gamePaused && !gameOver) {
         function loop() {
             if (!gamePaused && !gameOver) {
                 clearCanvas();
                 updatePlayer();
                 updateBullets();
                 updateEnemies();
-                checkCollisions();
+                checkCollisions(); // Ensure only one checkCollisions function call exists
                 drawPlayer();
                 drawBullets();
                 drawEnemies();
                 requestAnimationFrame(loop);
-            } else {
-                gameLoopRunning = false;
             }
         }
         loop();
     }
 }
+
+// Start the game
+spawnEnemies();
+updateHUD();
+gameLoop();
+
 
 // Start the game
 spawnEnemies();
