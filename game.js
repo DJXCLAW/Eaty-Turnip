@@ -153,6 +153,7 @@ function checkCollisions() {
 
                 // Apply damage based on weapon type
                 let damage = playerWeapon === 'shotgun' ? 3 : 2;
+                let damage = playerWeapon === 'minigun' ? 1 : 2;
                 enemy.health -= damage;
 
                 // Remove the bullet after it hits
@@ -246,7 +247,8 @@ function calculateAngleToMouse(mouseX, mouseY) {
 function shoot() {
     const now = Date.now();
     let fireRate = playerWeapon === 'shotgun' ? SHOTGUN_FIRE_RATE : FIRE_RATE;
-
+    let fireRate = playerWeapon === 'minigun' ? MINIGUN_FIRE_RATE : FIRE_RATE;
+    
     if (now - lastFireTime > fireRate) {
         if (playerWeapon === 'shotgun') {
             // Shotgun fires multiple bullets at once
