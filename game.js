@@ -336,7 +336,7 @@ function buyShotgun() {
     }
 }
 
-function buyminigun() {
+function buyMinigun() {
     if (playerCoins >= 500) {
         playerCoins -= 500;
         playerWeapon = 'minigun';
