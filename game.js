@@ -259,7 +259,7 @@ function shoot() {
                     vy: Math.sin(angle) * BASE_BULLET_SPEED
                 });
             }
-        } else {
+        } if (playerWeapon === 'pistol') {
             // Pistol fires a single bullet
             bullets.push({
                 x: player.x + player.width / 2,
