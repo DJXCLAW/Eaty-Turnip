@@ -416,7 +416,8 @@ canvas.addEventListener('mousemove', (e) => {
 
 // Game loop
 function gameLoop() {
-    if (!gamePaused && !gameOver) {
+       if (!gamePaused && !gameOver && !gameLoopRunning) {
+        gameLoopRunning = true;
         function loop() {
             if (!gamePaused && !gameOver) {
                 clearCanvas();
@@ -428,17 +429,13 @@ function gameLoop() {
                 drawBullets();
                 drawEnemies();
                 requestAnimationFrame(loop);
+                            } else {
+                gameLoopRunning = false;
             }
         }
         loop();
     }
 }
-
-// Start the game
-spawnEnemies();
-updateHUD();
-gameLoop();
-
 
 // Start the game
 spawnEnemies();
