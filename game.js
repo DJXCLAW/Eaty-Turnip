@@ -24,7 +24,7 @@ let player = {
     width: PLAYER_SIZE,
     height: PLAYER_SIZE,
     speed: BASE_PLAYER_SPEED,
-    hp: playerHp,F
+    hp: playerHp,
     angle: 0 // Player's rotation angle (in radians)
 };
 
@@ -34,7 +34,6 @@ let lastFireTime = 0;
 let waveNumber = 1; // Start at wave 1
 const FIRE_RATE = 200; // Milliseconds for pistol
 const SHOTGUN_FIRE_RATE = 500; // Milliseconds for shotgun
-const MINIGUN_FIRE_RATE = 10; // Milliseconds for minigun
 const ENEMY_SPAWN_RATE = 5; // Number of enemies per wave
 
 let gamePaused = false; // Add a gamePaused variable to handle pause/resume
@@ -104,20 +103,19 @@ function drawEnemies() {
 
 // Function to update the player's position
 function updatePlayer() {
-    if (keys['a'] || keys['ArrowLeft']) {
-        player.x = Math.max(0, player.x - player.speed);
+    if (keys['a'] || keys['ArrowLeft'] && player.x > 0) {
+        player.x -= player.speed;
     }
-    if (keys['d'] || keys['ArrowRight']) {
-        player.x = Math.min(canvas.width - player.width, player.x + player.speed);
+    if (keys['d'] || keys['ArrowRight'] && player.x + player.width < canvas.width) {
+        player.x += player.speed;
     }
-    if (keys['w'] || keys['ArrowUp']) {
-        player.y = Math.max(0, player.y - player.speed);
+    if (keys['w'] || keys['ArrowUp'] && player.y > 0) {
+        player.y -= player.speed;
     }
-    if (keys['s'] || keys['ArrowDown']) {
-        player.y = Math.min(canvas.height - player.height, player.y + player.speed);
+    if (keys['s'] || keys['ArrowDown'] && player.y + player.height < canvas.height) {
+        player.y += player.speed;
     }
 }
-
 
 // Function to update the bullets' positions
 function updateBullets() {
@@ -142,6 +140,7 @@ function updateEnemies() {
     });
 }
 
+// Function to detect collisions between bullets and enemies
 function checkCollisions() {
     bullets.forEach((bullet, bulletIndex) => {
         enemies.forEach((enemy, enemyIndex) => {
@@ -151,12 +150,7 @@ function checkCollisions() {
                 bullet.y + BULLET_SIZE > enemy.y) {
 
                 // Apply damage based on weapon type
-                let damage = 2; // Default damage
-                if (playerWeapon === 'shotgun') {
-                    damage = 3;
-                } else if (playerWeapon === 'minigun') {
-                    damage = 1;
-                }
+                let damage = playerWeapon === 'shotgun' ? 3 : 2;
                 enemy.health -= damage;
 
                 // Remove the bullet after it hits
@@ -198,7 +192,6 @@ function checkCollisions() {
         nextWave(); // Start the next wave
     }
 }
-
 
 // Function to spawn enemies at the edges of the screen
 function spawnEnemies() {
@@ -247,16 +240,11 @@ function calculateAngleToMouse(mouseX, mouseY) {
     return Math.atan2(dy, dx);
 }
 
-let fireRate;
-if (playerWeapon === 'shotgun') {
-    fireRate = SHOTGUN_FIRE_RATE;
-} else if (playerWeapon === 'minigun') {
-    fireRate = MINIGUN_FIRE_RATE;
-} else {
-    fireRate = FIRE_RATE; // Default fire rate for other weapons
-}
+// Function to handle shooting
+function shoot() {
+    const now = Date.now();
+    let fireRate = playerWeapon === 'shotgun' ? SHOTGUN_FIRE_RATE : FIRE_RATE;
 
-    
     if (now - lastFireTime > fireRate) {
         if (playerWeapon === 'shotgun') {
             // Shotgun fires multiple bullets at once
@@ -270,24 +258,13 @@ if (playerWeapon === 'shotgun') {
                     vy: Math.sin(angle) * BASE_BULLET_SPEED
                 });
             }
-        } if (playerWeapon === 'pistol') {
+        } else {
             // Pistol fires a single bullet
             bullets.push({
                 x: player.x + player.width / 2,
                 y: player.y + player.height / 2,
                 vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
                 vy: Math.sin(player.angle) * BASE_BULLET_SPEED
-            });
-        }
-        lastFireTime = now;
-    }
-    if (playerWeapon === 'minigun') {
-            // minigun fires a single bullet
-            bullets.push({
-                x: player.x + player.width / 2,
-                y: player.y + player.height / 2,
-                vx: Math.cos(player.angle) * MINIGUN_FIRE_RATE,
-                vy: Math.sin(player.angle) * MINIGUN_FIRE_RATE
             });
         }
         lastFireTime = now;
@@ -330,17 +307,6 @@ function buyShotgun() {
         playerCoins -= 100;
         playerWeapon = 'shotgun';
         document.getElementById('shotgunStatus').innerText = 'Purchased';
-        updateHUD();
-    } else {
-        alert("Not enough coins!");
-    }
-}
-
-function buyMinigun() {
-    if (playerCoins >= 500) {
-        playerCoins -= 500;
-        playerWeapon = 'minigun';
-        document.getElementById('minigunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
         alert("Not enough coins!");
@@ -405,5 +371,3 @@ function gameLoop() {
 spawnEnemies();
 updateHUD();
 gameLoop();
-
-
