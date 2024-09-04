@@ -420,15 +420,14 @@ function gameLoop() {
         gameLoopRunning = true;
         function loop() {
             if (!gamePaused && !gameOver) {
-                drawPlayer();
-                drawBullets();
-                drawEnemies();
                 clearCanvas();
                 updatePlayer();
                 updateBullets();
                 updateEnemies();
                 checkCollisions();
-               
+                drawPlayer();
+                drawBullets();
+                drawEnemies();
                 requestAnimationFrame(loop);
             } else {
                 gameLoopRunning = false;
