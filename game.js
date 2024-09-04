@@ -241,13 +241,19 @@ function calculateAngleToMouse(mouseX, mouseY) {
     const dy = mouseY - (player.y + player.height / 2);
     return Math.atan2(dy, dx);
 }
-
-// Function to handle shooting
+// handles shooting
 function shoot() {
     const now = Date.now();
-    let fireRate = playerWeapon === 'shotgun' ? SHOTGUN_FIRE_RATE;
-    let fireRate = playerWeapon === 'pistol' ? BASE_FIRE_RATE;
-    let fireRate = playerWeapon === 'minigun' ? MINIGUN_FIRE_RATE;
+    let fireRate;
+
+    // Determine the fire rate based on the equipped weapon
+    if (playerWeapon === 'shotgun') {
+        fireRate = SHOTGUN_FIRE_RATE;
+    } else if (playerWeapon === 'minigun') {
+        fireRate = MINIGUN_FIRE_RATE;
+    } else {
+        fireRate = FIRE_RATE; // Default to pistol fire rate
+    }
 
     if (now - lastFireTime > fireRate) {
         if (playerWeapon === 'shotgun') {
@@ -262,7 +268,15 @@ function shoot() {
                     vy: Math.sin(angle) * BASE_BULLET_SPEED
                 });
             }
-        } if (playerWeapon === 'pistol') {
+        } else if (playerWeapon === 'minigun') {
+            // Minigun fires a single bullet with a higher fire rate
+            bullets.push({
+                x: player.x + player.width / 2,
+                y: player.y + player.height / 2,
+                vx: Math.cos(player.angle) * BASE_BULLET_SPEED, // Assuming BASE_BULLET_SPEED for minigun
+                vy: Math.sin(player.angle) * BASE_BULLET_SPEED
+            });
+        } else {
             // Pistol fires a single bullet
             bullets.push({
                 x: player.x + player.width / 2,
@@ -270,22 +284,11 @@ function shoot() {
                 vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
                 vy: Math.sin(player.angle) * BASE_BULLET_SPEED
             });
-            
-        }
-    }
-            if (playerWeapon === 'minigun') {
-            // Pistol fires a single bullet
-            bullets.push({
-                x: player.x + player.width / 2,
-                y: player.y + player.height / 2,
-                vx: Math.cos(player.angle) * MINIGUN_BULLET_SPEED,
-                vy: Math.sin(player.angle) * MINIGUN_BULLET_SPEED
-            });
-            
         }
         lastFireTime = now;
     }
 }
+
 
 // Shop functions
 function buyHealthUpgrade() {
