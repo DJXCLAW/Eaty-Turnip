@@ -416,16 +416,13 @@ canvas.addEventListener('mousemove', (e) => {
 
 // Game loop
 function gameLoop() {
+    if (!gamePaused && !gameOver) {
        if (!gamePaused && !gameOver && !gameLoopRunning) {
         gameLoopRunning = true;
         function loop() {
             if (!gamePaused && !gameOver) {
                 clearCanvas();
-                updatePlayer();
-                updateBullets();
-                updateEnemies();
-                checkCollisions(); // Ensure only one checkCollisions function call exists
-                drawPlayer();
+function gameLoop() {
                 drawBullets();
                 drawEnemies();
                 requestAnimationFrame(loop);
@@ -434,10 +431,7 @@ function gameLoop() {
             }
         }
         loop();
-    }
-}
-
-// Start the game
+function gameLoop() {
 spawnEnemies();
 updateHUD();
 gameLoop();
