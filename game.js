@@ -34,6 +34,7 @@ let lastFireTime = 0;
 let waveNumber = 1; // Start at wave 1
 const FIRE_RATE = 200; // Milliseconds for pistol
 const SHOTGUN_FIRE_RATE = 500; // Milliseconds for shotgun
+const MINIGUN_FIRE_RATE = 1; // Milliseconds for minigun
 const ENEMY_SPAWN_RATE = 5; // Number of enemies per wave
 
 let gamePaused = false; // Add a gamePaused variable to handle pause/resume
@@ -244,7 +245,9 @@ function calculateAngleToMouse(mouseX, mouseY) {
 // Function to handle shooting
 function shoot() {
     const now = Date.now();
-    let fireRate = playerWeapon === 'shotgun' ? SHOTGUN_FIRE_RATE : FIRE_RATE;
+    let fireRate = playerWeapon === 'shotgun' ? SHOTGUN_FIRE_RATE;
+    let fireRate = playerWeapon === 'pistol' ? BASE_FIRE_RATE;
+    let fireRate = playerWeapon === 'minigun' ? MINIGUN_FIRE_RATE;
 
     if (now - lastFireTime > fireRate) {
         if (playerWeapon === 'shotgun') {
@@ -267,6 +270,18 @@ function shoot() {
                 vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
                 vy: Math.sin(player.angle) * BASE_BULLET_SPEED
             });
+            
+        }
+    }
+            if (playerWeapon === 'minigun') {
+            // Pistol fires a single bullet
+            bullets.push({
+                x: player.x + player.width / 2,
+                y: player.y + player.height / 2,
+                vx: Math.cos(player.angle) * MINIGUN_BULLET_SPEED,
+                vy: Math.sin(player.angle) * MINIGUN_BULLET_SPEED
+            });
+            
         }
         lastFireTime = now;
     }
@@ -307,6 +322,17 @@ function buyShotgun() {
     if (playerCoins >= 100) {
         playerCoins -= 100;
         playerWeapon = 'shotgun';
+        document.getElementById('shotgunStatus').innerText = 'Purchased';
+        updateHUD();
+    } else {
+        alert("Not enough coins!");
+    }
+}
+
+function buyMinigun() {
+    if (playerCoins >= 500) {
+        playerCoins -= 500;
+        playerWeapon = 'minigun';
         document.getElementById('shotgunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
