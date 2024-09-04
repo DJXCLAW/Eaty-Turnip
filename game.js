@@ -336,7 +336,7 @@ function buyMinigun() {
     if (playerCoins >= 500) {
         playerCoins -= 500;
         playerWeapon = 'minigun';
-        document.getElementById('shotgunStatus').innerText = 'Purchased';
+        document.getElementById('MinigunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
         alert("Not enough coins!");
