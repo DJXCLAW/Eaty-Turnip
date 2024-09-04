@@ -35,6 +35,8 @@ let waveNumber = 1; // Start at wave 1
 const FIRE_RATE = 200; // Milliseconds for pistol
 const SHOTGUN_FIRE_RATE = 500; // Milliseconds for shotgun
 const MINIGUN_FIRE_RATE = 1; // Milliseconds for minigun
+const SNIPER_FIRE_RATE = 1000; // Milliseconds for sniper
+const SNIPER_PENETRATION = 3; // Number of enemies a sniper bullet can penetrate
 const ENEMY_SPAWN_RATE = 5; // Number of enemies per wave
 
 let gamePaused = false; // Add a gamePaused variable to handle pause/resume
@@ -142,7 +144,6 @@ function updateEnemies() {
     });
 }
 
-// Function to detect collisions between bullets and enemies
 function checkCollisions() {
     bullets.forEach((bullet, bulletIndex) => {
         enemies.forEach((enemy, enemyIndex) => {
@@ -153,10 +154,17 @@ function checkCollisions() {
 
                 // Apply damage based on weapon type
                 let damage = playerWeapon === 'shotgun' ? 3 : 2;
+                if (playerWeapon === 'sniper') {
+                    damage = 5; // Higher damage for sniper
+                }
                 enemy.health -= damage;
 
-                // Remove the bullet after it hits
-                bullets.splice(bulletIndex, 1);
+                // Handle bullet penetration for sniper
+                if (playerWeapon === 'sniper' && bullet.penetration > 1) {
+                    bullet.penetration--; // Reduce penetration count
+                } else {
+                    bullets.splice(bulletIndex, 1); // Remove the bullet if no penetration left
+                }
 
                 // If the enemy's health is 0 or below, remove it
                 if (enemy.health <= 0) {
@@ -188,6 +196,13 @@ function checkCollisions() {
             }
         }
     });
+
+    // Check if all enemies are defeated
+    if (enemies.length === 0 && !gameOver) {
+        nextWave(); // Start the next wave
+    }
+}
+
 
     // Check if all enemies are defeated
     if (enemies.length === 0 && !gameOver) {
@@ -251,6 +266,8 @@ function shoot() {
         fireRate = SHOTGUN_FIRE_RATE;
     } else if (playerWeapon === 'minigun') {
         fireRate = MINIGUN_FIRE_RATE;
+    } else if (playerWeapon === 'sniper') {
+        fireRate = SNIPER_FIRE_RATE;
     } else {
         fireRate = FIRE_RATE; // Default to pistol fire rate
     }
@@ -265,7 +282,8 @@ function shoot() {
                     x: player.x + player.width / 2,
                     y: player.y + player.height / 2,
                     vx: Math.cos(angle) * BASE_BULLET_SPEED,
-                    vy: Math.sin(angle) * BASE_BULLET_SPEED
+                    vy: Math.sin(angle) * BASE_BULLET_SPEED,
+                    penetration: 1 // No penetration for shotgun bullets
                 });
             }
         } else if (playerWeapon === 'minigun') {
@@ -273,8 +291,18 @@ function shoot() {
             bullets.push({
                 x: player.x + player.width / 2,
                 y: player.y + player.height / 2,
-                vx: Math.cos(player.angle) * BASE_BULLET_SPEED, // Assuming BASE_BULLET_SPEED for minigun
-                vy: Math.sin(player.angle) * BASE_BULLET_SPEED
+                vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
+                vy: Math.sin(player.angle) * BASE_BULLET_SPEED,
+                penetration: 1 // No penetration for minigun bullets
+            });
+        } else if (playerWeapon === 'sniper') {
+            // Sniper fires a single penetrating bullet
+            bullets.push({
+                x: player.x + player.width / 2,
+                y: player.y + player.height / 2,
+                vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
+                vy: Math.sin(player.angle) * BASE_BULLET_SPEED,
+                penetration: SNIPER_PENETRATION // Sniper bullet can penetrate enemies
             });
         } else {
             // Pistol fires a single bullet
@@ -282,7 +310,8 @@ function shoot() {
                 x: player.x + player.width / 2,
                 y: player.y + player.height / 2,
                 vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
-                vy: Math.sin(player.angle) * BASE_BULLET_SPEED
+                vy: Math.sin(player.angle) * BASE_BULLET_SPEED,
+                penetration: 1 // No penetration for pistol bullets
             });
         }
         lastFireTime = now;
@@ -341,6 +370,17 @@ function buyMinigun() {
     } else {
         alert("Not enough coins!");
     }
+    function buySniper() {
+    if (playerCoins >= 300) { // Set the cost for the sniper
+        playerCoins -= 300;
+        playerWeapon = 'sniper';
+        document.getElementById('sniperStatus').innerText = 'Purchased';
+        updateHUD();
+    } else {
+        alert("Not enough coins!");
+    }
+}
+
 }
 
 // Function to end the game
