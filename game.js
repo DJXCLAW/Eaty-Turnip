@@ -103,19 +103,20 @@ function drawEnemies() {
 
 // Function to update the player's position
 function updatePlayer() {
-    if (keys['a'] || keys['ArrowLeft'] && player.x > 0) {
-        player.x -= player.speed;
+    if (keys['a'] || keys['ArrowLeft']) {
+        player.x = Math.max(0, player.x - player.speed);
     }
-    if (keys['d'] || keys['ArrowRight'] && player.x + player.width < canvas.width) {
-        player.x += player.speed;
+    if (keys['d'] || keys['ArrowRight']) {
+        player.x = Math.min(canvas.width - player.width, player.x + player.speed);
     }
-    if (keys['w'] || keys['ArrowUp'] && player.y > 0) {
-        player.y -= player.speed;
+    if (keys['w'] || keys['ArrowUp']) {
+        player.y = Math.max(0, player.y - player.speed);
     }
-    if (keys['s'] || keys['ArrowDown'] && player.y + player.height < canvas.height) {
-        player.y += player.speed;
+    if (keys['s'] || keys['ArrowDown']) {
+        player.y = Math.min(canvas.height - player.height, player.y + player.speed);
     }
 }
+
 
 // Function to update the bullets' positions
 function updateBullets() {
