@@ -24,7 +24,7 @@ let player = {
     width: PLAYER_SIZE,
     height: PLAYER_SIZE,
     speed: BASE_PLAYER_SPEED,
-    hp: playerHp,
+    hp: playerHp,F
     angle: 0 // Player's rotation angle (in radians)
 };
 
@@ -34,7 +34,7 @@ let lastFireTime = 0;
 let waveNumber = 1; // Start at wave 1
 const FIRE_RATE = 200; // Milliseconds for pistol
 const SHOTGUN_FIRE_RATE = 500; // Milliseconds for shotgun
-const MINIGUN_FIRE_RATE = 10; // Milliseconds for Minigun
+const MINIGUN_FIRE_RATE = 10; // Milliseconds for minigun
 const ENEMY_SPAWN_RATE = 5; // Number of enemies per wave
 
 let gamePaused = false; // Add a gamePaused variable to handle pause/resume
@@ -142,7 +142,6 @@ function updateEnemies() {
     });
 }
 
-// Function to detect collisions between bullets and enemies
 function checkCollisions() {
     bullets.forEach((bullet, bulletIndex) => {
         enemies.forEach((enemy, enemyIndex) => {
@@ -151,15 +150,14 @@ function checkCollisions() {
                 bullet.y < enemy.y + enemy.height &&
                 bullet.y + BULLET_SIZE > enemy.y) {
 
-              let damage;
-if (playerWeapon === 'shotgun') {
-    damage = 3;
-} else if (playerWeapon === 'minigun') {
-    damage = 1;
-} else {
-    damage = 2; // Default damage for other weapons
-}
-
+                // Apply damage based on weapon type
+                let damage = 2; // Default damage
+                if (playerWeapon === 'shotgun') {
+                    damage = 3;
+                } else if (playerWeapon === 'minigun') {
+                    damage = 1;
+                }
+                enemy.health -= damage;
 
                 // Remove the bullet after it hits
                 bullets.splice(bulletIndex, 1);
@@ -200,6 +198,7 @@ if (playerWeapon === 'shotgun') {
         nextWave(); // Start the next wave
     }
 }
+
 
 // Function to spawn enemies at the edges of the screen
 function spawnEnemies() {
@@ -282,8 +281,8 @@ if (playerWeapon === 'shotgun') {
         }
         lastFireTime = now;
     }
-    if (playerWeapon === 'Minigun') {
-            // Minigun fires a single bullet
+    if (playerWeapon === 'minigun') {
+            // minigun fires a single bullet
             bullets.push({
                 x: player.x + player.width / 2,
                 y: player.y + player.height / 2,
@@ -337,10 +336,10 @@ function buyShotgun() {
     }
 }
 
-function buyMinigun() {
+function buyminigun() {
     if (playerCoins >= 500) {
         playerCoins -= 500;
-        playerWeapon = 'Minigun';
+        playerWeapon = 'minigun';
         document.getElementById('minigunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
