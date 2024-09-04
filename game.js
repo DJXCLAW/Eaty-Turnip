@@ -151,10 +151,15 @@ function checkCollisions() {
                 bullet.y < enemy.y + enemy.height &&
                 bullet.y + BULLET_SIZE > enemy.y) {
 
-                // Apply damage based on weapon type
-                let damage = playerWeapon === 'shotgun' ? 3 : 2;
-                let damage = playerWeapon === 'minigun' ? 1 : 2;
-                enemy.health -= damage;
+              let damage;
+if (playerWeapon === 'shotgun') {
+    damage = 3;
+} else if (playerWeapon === 'minigun') {
+    damage = 1;
+} else {
+    damage = 2; // Default damage for other weapons
+}
+
 
                 // Remove the bullet after it hits
                 bullets.splice(bulletIndex, 1);
@@ -243,11 +248,15 @@ function calculateAngleToMouse(mouseX, mouseY) {
     return Math.atan2(dy, dx);
 }
 
-// Function to handle shooting
-function shoot() {
-    const now = Date.now();
-    let fireRate = playerWeapon === 'shotgun' ? SHOTGUN_FIRE_RATE : FIRE_RATE;
-    let fireRate = playerWeapon === 'minigun' ? MINIGUN_FIRE_RATE : FIRE_RATE;
+let fireRate;
+if (playerWeapon === 'shotgun') {
+    fireRate = SHOTGUN_FIRE_RATE;
+} else if (playerWeapon === 'minigun') {
+    fireRate = MINIGUN_FIRE_RATE;
+} else {
+    fireRate = FIRE_RATE; // Default fire rate for other weapons
+}
+
     
     if (now - lastFireTime > fireRate) {
         if (playerWeapon === 'shotgun') {
@@ -278,8 +287,8 @@ function shoot() {
             bullets.push({
                 x: player.x + player.width / 2,
                 y: player.y + player.height / 2,
-                vx: Math.cos(player.angle) * MINIGUN_BULLET_SPEED,
-                vy: Math.sin(player.angle) * MINIGUN_BULLET_SPEED
+                vx: Math.cos(player.angle) * MINIGUN_FIRE_RATE,
+                vy: Math.sin(player.angle) * MINIGUN_FIRE_RATE
             });
         }
         lastFireTime = now;
