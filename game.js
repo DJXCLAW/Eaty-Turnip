@@ -39,10 +39,10 @@ const SNIPER_FIRE_RATE = 1000;
 const SNIPER_PENETRATION = 3;
 const ENEMY_SPAWN_RATE = 5;
 const weapons = {
-    pistol: 1,
-    shotgun: 2,
-    minigun: 3,
-    sniper: 4
+    pistol: { id: 1, cost: 500, unlocked: true },
+    shotgun: { id: 2, cost: 1000, unlocked: false },
+    minigun: { id: 3, cost: 200, unlocked: false },
+    sniper: { id: 4, cost: 700, unlocked: false }
 };
 
 
