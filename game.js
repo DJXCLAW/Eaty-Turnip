@@ -232,10 +232,20 @@ function spawnEnemies() {
 // Function to handle shooting
 function shoot() {
     const now = Date.now();
-    const fireRate = playerWeapon.fireRate;
+    let fireRate;
+
+    if (playerWeapon === 'shotgun') {
+        fireRate = SHOTGUN_FIRE_RATE;
+    } else if (playerWeapon === 'minigun') {
+        fireRate = MINIGUN_FIRE_RATE;
+    } else if (playerWeapon === 'sniper') {
+        fireRate = SNIPER_FIRE_RATE;
+    } else {
+        fireRate = FIRE_RATE;
+    }
 
     if (now - lastFireTime > fireRate) {
-        if (playerWeapon.name === 'shotgun') {
+        if (playerWeapon === 'shotgun') {
             for (let i = -1; i <= 1; i++) {
                 const angleOffset = (Math.PI / 12) * i;
                 const angle = player.angle + angleOffset;
@@ -244,16 +254,24 @@ function shoot() {
                     y: player.y + player.height / 2,
                     vx: Math.cos(angle) * BASE_BULLET_SPEED,
                     vy: Math.sin(angle) * BASE_BULLET_SPEED,
-                    penetration: playerWeapon.penetration
+                    penetration: 1
                 });
             }
-        } else if (playerWeapon.name === 'sniper') {
+        } else if (playerWeapon === 'minigun') {
             bullets.push({
                 x: player.x + player.width / 2,
                 y: player.y + player.height / 2,
                 vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
                 vy: Math.sin(player.angle) * BASE_BULLET_SPEED,
-                penetration: playerWeapon.penetration
+                penetration: 1
+            });
+        } else if (playerWeapon === 'sniper') {
+            bullets.push({
+                x: player.x + player.width / 2,
+                y: player.y + player.height / 2,
+                vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
+                vy: Math.sin(player.angle) * BASE_BULLET_SPEED,
+                penetration: SNIPER_PENETRATION
             });
         } else {
             bullets.push({
@@ -261,61 +279,12 @@ function shoot() {
                 y: player.y + player.height / 2,
                 vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
                 vy: Math.sin(player.angle) * BASE_BULLET_SPEED,
-                penetration: playerWeapon.penetration
+                penetration: 1
             });
         }
         lastFireTime = now;
     }
 }
-
-
-const weapons = [
-    { name: 'pistol', fireRate: FIRE_RATE, penetration: 1, purchased: true },
-    { name: 'shotgun', fireRate: SHOTGUN_FIRE_RATE, penetration: 1, purchased: false },
-    { name: 'minigun', fireRate: MINIGUN_FIRE_RATE, penetration: 1, purchased: false },
-    { name: 'sniper', fireRate: SNIPER_FIRE_RATE, penetration: SNIPER_PENETRATION, purchased: false }
-];
-
-function switchWeapon(newIndex) {
-    currentWeaponIndex = newIndex;
-    playerWeapon = weapons[currentWeaponIndex];
-    document.getElementById('weaponStatus').innerText = `Weapon: ${playerWeapon.name}`;
-}
-
-let currentWeaponIndex = 0;
-let playerWeapon = weapons[currentWeaponIndex];  // Start with the first (pistol)
-
-document.addEventListener('keydown', (e) => {
-    keys[e.key] = true;
-
-    if (e.key === ' ') {
-        shoot();
-    }
-
-    // Switch to specific weapon using number keys (1-4)
-    if (e.key >= '1' && e.key <= '4') {
-        const weaponIndex = parseInt(e.key) - 1;
-        switchWeapon(weaponIndex);
-    }
-
-    // Cycle weapons using 'q' (previous) and 'e' (next)
-    if (e.key === 'q') {
-        switchWeapon((currentWeaponIndex - 1 + weapons.length) % weapons.length);
-    } else if (e.key === 'e') {
-        switchWeapon((currentWeaponIndex + 1) % weapons.length);
-    }
-
-    // Enter key for shop
-    if (e.key === 'Enter') {
-        if (document.getElementById('shopContainer').style.display === 'flex') {
-            hideShop();
-        } else {
-            showShop();
-        }
-    }
-});
-
-
 
 // Shop functions
 function buyHealthUpgrade() {
