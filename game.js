@@ -383,27 +383,47 @@ function hideShop() {
 canvas.addEventListener('mousemove', (e) => {
     player.angle = calculateAngleToMouse(e.clientX, e.clientY);
 });
-
 // Game loop
 function gameLoop() {
-    if (!gamePaused && !gameOver) {
-        gameLoopRunning = true; // Ensure we track that the loop is running
-        clearCanvas();
-        drawPlayer();
-        drawBullets();
-        drawEnemies();
-        updatePlayer();
-        updateBullets();
-        updateEnemies();
-        checkCollisions();
+    if (!gamePaused && !gameOver && !gameLoopRunning) {
+        gameLoopRunning = true; // Set the flag to prevent multiple loops
+        function loop() {
+            if (!gamePaused && !gameOver) {
+                clearCanvas();
+                updatePlayer();
+                updateBullets();
+                updateEnemies();
+                checkCollisions();
+                drawPlayer();
+                drawBullets();
+                drawEnemies();
+                requestAnimationFrame(loop);
+            } else {
+                gameLoopRunning = false; // Reset the flag if game is paused or over
+            }
+        }
+        loop();
+    // Only start the game loop if it's not already running
+    if (!gameLoopRunning) {
+        gameLoop();
+    gameLoopRunning = true; // Set to true so no other loop can start
+
+    function loop() {
+        if (!gamePaused && !gameOver) {
+            clearCanvas();
+            updatePlayer();
+            updateBullets();
+            updateEnemies();
+            checkCollisions();
+            drawPlayer();
+            drawBullets();
+            drawEnemies();
+            requestAnimationFrame(loop); // Keep the loop going if game is running
+        } else {
+            gameLoopRunning = false; // Reset the flag if game is paused or over
+        }
     }
 
-    if (!gameOver) {
-        requestAnimationFrame(gameLoop);
-    } else {
-        gameLoopRunning = false; // Stop tracking the loop when the game is over
-    }
-}
 
 // Start the game loop
 gameLoop();
