@@ -370,7 +370,7 @@ function buyPlayerSpeedUpgrade() {
 
 function buyShotgun() {
     if (playerCoins >= 100) {
-        const weapon = weapons[shotgun];
+        const weapon = weapons['shotgun'];
         playerCoins -= 100;
         playerWeapon = 'shotgun';
         shotgun.unlocked = true;
@@ -383,7 +383,7 @@ function buyShotgun() {
 
 function buyMinigun() {
     if (playerCoins >= 500) {
-        const weapon = weapons[minigun];
+        const weapon = weapons['minigun'];
         playerCoins -= 500;
         playerWeapon = 'minigun';
         minigun.unlocked = true;
@@ -396,7 +396,7 @@ function buyMinigun() {
 
 function buySniper() {
     if (playerCoins >= 300) {
-        const weapon = weapons[sniper];
+        const weapon = weapons['sniper'];
         playerCoins -= 300;
         playerWeapon = 'sniper';
         sniper.unlocked = true;
