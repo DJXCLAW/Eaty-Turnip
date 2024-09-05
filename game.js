@@ -50,50 +50,6 @@ let gamePaused = false;
 let gameOver = false;
 let gameLoopRunning = false; // Ensure only one loop instance runs
 
-function equipPistol() {
-    if (pistol.unlocked = true) {
-        playerWeapon = 'pistol';
-         updateHUD();
-    } else if (playerWeapon = 'pistol' {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
-    }
-}
-
-function equipShotgun() {
-    if (shotgun.unlocked = true) {
-        playerWeapon = 'shotgun';
-         updateHUD();
-    } else if (playerWeapon = 'shotgun' {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
-    }
-}
-
-function equipMinigun() {
-    if (minigun.unlocked = true) {
-        playerWeapon = 'minigun';
-         updateHUD();
-    } else if (playerWeapon = 'minigun' {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
-    }
-}
-
-function equipSniper() {
-    if (sniper.unlocked = true) {
-        playerWeapon = 'sniper';
-         updateHUD();
-    } else if (playerWeapon = 'sniper' {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
-    }
-}
-
 // Key handling
 const keys = {};
 document.addEventListener('keydown', (e) => {
@@ -334,6 +290,50 @@ function shoot() {
             });
         }
         lastFireTime = now;
+    }
+}
+
+function equipPistol() {
+    if (pistol.unlocked = true) {
+        playerWeapon = 'pistol';
+         updateHUD();
+    } else if (playerWeapon = 'pistol') {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
+    }
+}
+
+function equipShotgun() {
+    if (shotgun.unlocked = true) {
+        playerWeapon = 'shotgun';
+         updateHUD();
+    } else if (playerWeapon = 'shotgun') {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
+    }
+}
+
+function equipMinigun() {
+    if (minigun.unlocked = true) {
+        playerWeapon = 'minigun';
+         updateHUD();
+    } else if (playerWeapon = 'minigun') {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
+    }
+}
+
+function equipSniper() {
+    if (sniper.unlocked = true) {
+        playerWeapon = 'sniper';
+         updateHUD();
+    } else if (playerWeapon = 'sniper') {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
     }
 }
 
