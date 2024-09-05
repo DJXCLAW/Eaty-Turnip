@@ -5,6 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>bean (rammer health fix)</title>
     <style>
+        /* Style for inventory container */
+#inventory {
+    display: grid;
+    grid-template-columns: repeat(3, 100px); /* 3 columns */
+    grid-gap: 10px; /* Gap between items */
+    padding: 20px;
+    background-color: #333;
+    border: 2px solid #fff;
+    width: 340px;
+    margin: 20px;
+    color: white;
+}
+
+/* Style for each inventory slot */
+.inventory-slot {
+    width: 100px;
+    height: 100px;
+    background-color: #555;
+    border: 2px solid #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: white;
+}
+
+/* Hover effect on inventory slots */
+.inventory-slot:hover {
+    background-color: #777;
+}
+
         body {
             margin: 0;
             overflow: hidden;
@@ -113,6 +144,20 @@
         <div class="shop-item">Sniper ($500) <button class="shop-button" onclick="buySniper()">Buy</button> <span id="sniperStatus">Not Purchased</span></div>
     </div>
 
+    <!-- Inventory container -->
+<div id="inventory">
+    <div class="inventory-slot" id="slot1"></div>
+    <div class="inventory-slot" id="slot2"></div>
+    <div class="inventory-slot" id="slot3"></div>
+    <div class="inventory-slot" id="slot4"></div>
+    <div class="inventory-slot" id="slot5"></div>
+    <div class="inventory-slot" id="slot6"></div>
+    <div class="inventory-slot" id="slot7"></div>
+    <div class="inventory-slot" id="slot8"></div>
+    <div class="inventory-slot" id="slot9"></div>
+</div>
+
+
     <canvas id="gameCanvas"></canvas>
     <script src="game.js"></script>
     <script>
@@ -125,6 +170,16 @@
             gamePaused = false;
             document.getElementById('shopContainer').style.display = 'none';
             gameLoop(); // Restart the game loop
+        }
+         function openInventory() {
+            gamePaused = true;
+            document.getElementById('shopContainer').style.display = 'none';
+            document.getElementById('inventoryContainer').style.display = 'flex';
+        }
+        function closeInventory() {
+            gamePaused = true;
+            document.getElementById('shopContainer').style.display = 'flex';
+            document.getElementById('inventoryContainer').style.display = 'none';
         }
     </script>
 </body>
