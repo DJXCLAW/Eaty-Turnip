@@ -12,10 +12,10 @@ const ENEMY_SIZE = 32;
 const BULLET_SIZE = 8;
 const BASE_PLAYER_SPEED = 5;
 const BASE_BULLET_SPEED = 8;
-const BASE_ENEMY_SPEED = 1; // Enemies move slower towards the player
-const DAMAGE_AMOUNT = 10; // Amount of damage player takes from an enemy hit
+const BASE_ENEMY_SPEED = 1;
+const DAMAGE_AMOUNT = 10;
 let playerCoins = 0;
-let playerWeapon = 'pistol'; // Start with a basic pistol
+let playerWeapon = 'pistol';
 let playerHp = 100;
 
 let player = {
@@ -25,23 +25,23 @@ let player = {
     height: PLAYER_SIZE,
     speed: BASE_PLAYER_SPEED,
     hp: playerHp,
-    angle: 0 // Player's rotation angle (in radians)
+    angle: 0
 };
 
 let bullets = [];
 let enemies = [];
 let lastFireTime = 0;
-let waveNumber = 1; // Start at wave 1
-const FIRE_RATE = 200; // Milliseconds for pistol
-const SHOTGUN_FIRE_RATE = 500; // Milliseconds for shotgun
-const MINIGUN_FIRE_RATE = 1; // Milliseconds for minigun
-const SNIPER_FIRE_RATE = 1000; // Milliseconds for sniper
-const SNIPER_PENETRATION = 3; // Number of enemies a sniper bullet can penetrate
-const ENEMY_SPAWN_RATE = 5; // Number of enemies per wave
+let waveNumber = 1;
+const FIRE_RATE = 200;
+const SHOTGUN_FIRE_RATE = 500;
+const MINIGUN_FIRE_RATE = 1;
+const SNIPER_FIRE_RATE = 1000;
+const SNIPER_PENETRATION = 3;
+const ENEMY_SPAWN_RATE = 5;
 
-let gamePaused = false; // Add a gamePaused variable to handle pause/resume
-let gameOver = false; // Add a gameOver variable to handle game over state
-let gameLoopRunning = false; // Track whether the game loop is running
+let gamePaused = false;
+let gameOver = false;
+let gameLoopRunning = false; // Ensure only one loop instance runs
 
 // Key handling
 const keys = {};
@@ -132,12 +132,10 @@ function updateBullets() {
 // Function to update the enemies' positions
 function updateEnemies() {
     enemies.forEach(enemy => {
-        // Calculate direction vector from enemy to player
         const dx = player.x - enemy.x;
         const dy = player.y - enemy.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        // Normalize direction and move the enemy towards the player
         enemy.x += (dx / distance) * BASE_ENEMY_SPEED;
         enemy.y += (dy / distance) * BASE_ENEMY_SPEED;
     });
@@ -152,24 +150,20 @@ function checkCollisions() {
                 bullet.y < enemy.y + enemy.height &&
                 bullet.y + BULLET_SIZE > enemy.y) {
 
-                // Apply damage based on weapon type
                 let damage = playerWeapon === 'shotgun' ? 3 : 2;
                 if (playerWeapon === 'sniper') {
-                    damage = 5; // Higher damage for sniper
+                    damage = 5;
                 }
                 enemy.health -= damage;
 
-                // Handle bullet penetration for sniper
                 if (playerWeapon === 'sniper' && bullet.penetration > 1) {
-                    bullet.penetration--; // Reduce penetration count
+                    bullet.penetration--;
                 } else {
-                    bullets.splice(bulletIndex, 1); // Remove the bullet if no penetration left
+                    bullets.splice(bulletIndex, 1);
                 }
 
-                // If the enemy's health is 0 or below, remove it
                 if (enemy.health <= 0) {
                     enemies.splice(enemyIndex, 1);
-                    // Increase the player's score and coins
                     playerCoins += 10;
                     updateHUD();
                 }
@@ -177,77 +171,62 @@ function checkCollisions() {
         });
     });
 
-    // Check for collisions between the player and enemies
     enemies.forEach((enemy, enemyIndex) => {
         if (player.x < enemy.x + enemy.width &&
             player.x + player.width > enemy.x &&
             player.y < enemy.y + enemy.height &&
             player.y + player.height > enemy.y) {
-            // Player takes damage
             player.hp -= DAMAGE_AMOUNT;
             updateHUD();
-
-            // Remove the enemy after collision
             enemies.splice(enemyIndex, 1);
 
-            // Check if the player's HP has reached zero
             if (player.hp <= 0) {
-                endGame(); // End the game
+                endGame();
             }
         }
     });
 
-    // Check if all enemies are defeated
     if (enemies.length === 0 && !gameOver) {
-        nextWave(); // Start the next wave
+        nextWave();
     }
 }
 
-// Function to spawn enemies at the edges of the screen
+// Function to spawn enemies
 function spawnEnemies() {
     for (let i = 0; i < ENEMY_SPAWN_RATE * waveNumber; i++) {
-        // Randomly decide which edge to spawn the enemy on
         const edge = Math.floor(Math.random() * 4);
 
         let x, y;
 
         switch (edge) {
-            case 0: // Top edge
+            case 0:
                 x = Math.random() * canvas.width;
                 y = -ENEMY_SIZE;
                 break;
-            case 1: // Right edge
+            case 1:
                 x = canvas.width;
                 y = Math.random() * canvas.height;
                 break;
-            case 2: // Bottom edge
+            case 2:
                 x = Math.random() * canvas.width;
                 y = canvas.height;
                 break;
-            case 3: // Left edge
+            case 3:
                 x = -ENEMY_SIZE;
                 y = Math.random() * canvas.height;
                 break;
         }
 
-        // Initialize each enemy with its own health
         const enemy = {
             x: x,
             y: y,
             width: ENEMY_SIZE,
             height: ENEMY_SIZE,
-            health: 5 // Set the enemy's health to 5
+            health: 5
         };
 
         enemies.push(enemy);
     }
-}
-
-// Function to calculate the angle between the player and the mouse cursor
-function calculateAngleToMouse(mouseX, mouseY) {
-    const dx = mouseX - (player.x + player.width / 2);
-    const dy = mouseY - (player.y + player.height / 2);
-    return Math.atan2(dy, dx);
 }
 
 // Function to handle shooting
@@ -255,7 +234,6 @@ function shoot() {
     const now = Date.now();
     let fireRate;
 
-    // Determine the fire rate based on the equipped weapon
     if (playerWeapon === 'shotgun') {
         fireRate = SHOTGUN_FIRE_RATE;
     } else if (playerWeapon === 'minigun') {
@@ -263,49 +241,45 @@ function shoot() {
     } else if (playerWeapon === 'sniper') {
         fireRate = SNIPER_FIRE_RATE;
     } else {
-        fireRate = FIRE_RATE; // Default to pistol fire rate
+        fireRate = FIRE_RATE;
     }
 
     if (now - lastFireTime > fireRate) {
         if (playerWeapon === 'shotgun') {
-            // Shotgun fires multiple bullets at once
             for (let i = -1; i <= 1; i++) {
-                const angleOffset = (Math.PI / 12) * i; // Spread the bullets out
+                const angleOffset = (Math.PI / 12) * i;
                 const angle = player.angle + angleOffset;
                 bullets.push({
                     x: player.x + player.width / 2,
                     y: player.y + player.height / 2,
                     vx: Math.cos(angle) * BASE_BULLET_SPEED,
                     vy: Math.sin(angle) * BASE_BULLET_SPEED,
-                    penetration: 1 // No penetration for shotgun bullets
+                    penetration: 1
                 });
             }
         } else if (playerWeapon === 'minigun') {
-            // Minigun fires a single bullet with a higher fire rate
             bullets.push({
                 x: player.x + player.width / 2,
                 y: player.y + player.height / 2,
                 vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
                 vy: Math.sin(player.angle) * BASE_BULLET_SPEED,
-                penetration: 1 // No penetration for minigun bullets
+                penetration: 1
             });
         } else if (playerWeapon === 'sniper') {
-            // Sniper fires a single penetrating bullet
             bullets.push({
                 x: player.x + player.width / 2,
                 y: player.y + player.height / 2,
                 vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
                 vy: Math.sin(player.angle) * BASE_BULLET_SPEED,
-                penetration: SNIPER_PENETRATION // Sniper bullet can penetrate enemies
+                penetration: SNIPER_PENETRATION
             });
         } else {
-            // Pistol fires a single bullet
             bullets.push({
                 x: player.x + player.width / 2,
                 y: player.y + player.height / 2,
                 vx: Math.cos(player.angle) * BASE_BULLET_SPEED,
                 vy: Math.sin(player.angle) * BASE_BULLET_SPEED,
-                penetration: 1 // No penetration for pistol bullets
+                penetration: 1
             });
         }
         lastFireTime = now;
@@ -358,7 +332,7 @@ function buyMinigun() {
     if (playerCoins >= 500) {
         playerCoins -= 500;
         playerWeapon = 'minigun';
-        document.getElementById('minigunStatus').innerText = 'Purchased'; // Corrected to lowercase 'minigunStatus'
+        document.getElementById('minigunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
         alert("Not enough coins!");
@@ -366,7 +340,7 @@ function buyMinigun() {
 }
 
 function buySniper() {
-    if (playerCoins >= 300) { // Set the cost for the sniper
+    if (playerCoins >= 300) {
         playerCoins -= 300;
         playerWeapon = 'sniper';
         document.getElementById('sniperStatus').innerText = 'Purchased';
@@ -400,6 +374,9 @@ function showShop() {
 function hideShop() {
     gamePaused = false;
     document.getElementById('shopContainer').style.display = 'none';
+    if (!gameLoopRunning) {
+        gameLoop(); // Resume the game loop
+    }
 }
 
 // Event listener for mouse movement to update player angle
@@ -410,6 +387,7 @@ canvas.addEventListener('mousemove', (e) => {
 // Game loop
 function gameLoop() {
     if (!gamePaused && !gameOver) {
+        gameLoopRunning = true; // Ensure we track that the loop is running
         clearCanvas();
         drawPlayer();
         drawBullets();
@@ -422,6 +400,8 @@ function gameLoop() {
 
     if (!gameOver) {
         requestAnimationFrame(gameLoop);
+    } else {
+        gameLoopRunning = false; // Stop tracking the loop when the game is over
     }
 }
 
