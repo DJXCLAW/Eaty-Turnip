@@ -120,7 +120,6 @@ function updatePlayer() {
     }
 }
 
-
 // Function to update the bullets' positions
 function updateBullets() {
     bullets = bullets.filter(bullet => bullet.x > 0 && bullet.x < canvas.width && bullet.y > 0 && bullet.y < canvas.height);
@@ -144,6 +143,7 @@ function updateEnemies() {
     });
 }
 
+// Function to check for collisions and enemy defeat
 function checkCollisions() {
     bullets.forEach((bullet, bulletIndex) => {
         enemies.forEach((enemy, enemyIndex) => {
@@ -203,13 +203,6 @@ function checkCollisions() {
     }
 }
 
-
-    // Check if all enemies are defeated
-    if (enemies.length === 0 && !gameOver) {
-        nextWave(); // Start the next wave
-    }
-}
-
 // Function to spawn enemies at the edges of the screen
 function spawnEnemies() {
     for (let i = 0; i < ENEMY_SPAWN_RATE * waveNumber; i++) {
@@ -256,7 +249,8 @@ function calculateAngleToMouse(mouseX, mouseY) {
     const dy = mouseY - (player.y + player.height / 2);
     return Math.atan2(dy, dx);
 }
-// handles shooting
+
+// Function to handle shooting
 function shoot() {
     const now = Date.now();
     let fireRate;
@@ -317,7 +311,6 @@ function shoot() {
         lastFireTime = now;
     }
 }
-
 
 // Shop functions
 function buyHealthUpgrade() {
@@ -417,21 +410,20 @@ canvas.addEventListener('mousemove', (e) => {
 // Game loop
 function gameLoop() {
     if (!gamePaused && !gameOver) {
-       if (!gamePaused && !gameOver && !gameLoopRunning) {
-        gameLoopRunning = true;
-        function loop() {
-            if (!gamePaused && !gameOver) {
-                clearCanvas();
-function gameLoop() {
-                drawBullets();
-                drawEnemies();
-                requestAnimationFrame(loop);
-                            } else {
-                gameLoopRunning = false;
-            }
-        }
-        loop();
-function gameLoop() {
-spawnEnemies();
-updateHUD();
+        clearCanvas();
+        drawPlayer();
+        drawBullets();
+        drawEnemies();
+        updatePlayer();
+        updateBullets();
+        updateEnemies();
+        checkCollisions();
+    }
+
+    if (!gameOver) {
+        requestAnimationFrame(gameLoop);
+    }
+}
+
+// Start the game loop
 gameLoop();
