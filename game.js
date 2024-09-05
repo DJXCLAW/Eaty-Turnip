@@ -378,13 +378,13 @@ function showShop() {
     document.getElementById('shopContainer').style.display = 'flex';
 }
 
+
 // Function to close the shop UI
 function hideShop() {
     gamePaused = false;
     document.getElementById('shopContainer').style.display = 'none';
-    if (!gameLoopRunning) {
-        gameLoop(); // Resume the game loop
-    }
+
+    // Do not call gameLoop here because it's already running, just unpause
 }
 
 // Event listener for mouse movement to update player angle
@@ -394,34 +394,27 @@ canvas.addEventListener('mousemove', (e) => {
 
 // Game loop
 function gameLoop() {
-    if (!gamePaused && !gameOver && !gameLoopRunning) {
-        gameLoopRunning = true; // Set the flag to prevent multiple loops
-        function loop() {
-            if (!gamePaused && !gameOver) {
-                clearCanvas();
-                updatePlayer();
-                updateBullets();
-                updateEnemies();
-                checkCollisions();
-                drawPlayer();
-                drawBullets();
-                drawEnemies();
-                requestAnimationFrame(loop);
-            } else {
-                gameLoopRunning = false; // Reset the flag if game is paused or over
-            }
+    if (gameLoopRunning) {
+        return; // If the game loop is already running, don't start another loop
+    }
+
+    gameLoopRunning = true; // Set to true so no other loop can start
+
+    function loop() {
+        if (!gamePaused && !gameOver) {
+            clearCanvas();
+            updatePlayer();
+            updateBullets();
+            updateEnemies();
+            checkCollisions();
+            drawPlayer();
+            drawBullets();
+            drawEnemies();
+            requestAnimationFrame(loop); // Keep the loop going if game is running
+        } else {
+            gameLoopRunning = false; // Reset the flag if game is paused or over
         }
-        loop();
     }
-}
 
-// Function to close the shop UI
-function hideShop() {
-    gamePaused = false;
-    document.getElementById('shopContainer').style.display = 'none';
-
-    // Only start the game loop if it's not already running
-    if (!gameLoopRunning) {
-        gameLoop();
-    }
+    loop(); // Start the loop
 }
