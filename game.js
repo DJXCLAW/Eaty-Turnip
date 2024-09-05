@@ -50,6 +50,50 @@ let gamePaused = false;
 let gameOver = false;
 let gameLoopRunning = false; // Ensure only one loop instance runs
 
+function equipPistol() {
+    if (pistol.unlocked = true) {
+        playerWeapon = 'pistol';
+         updateHUD();
+    } else if (playerWeapon = 'pistol' {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
+    }
+}
+
+function equipShotgun() {
+    if (shotgun.unlocked = true) {
+        playerWeapon = 'shotgun';
+         updateHUD();
+    } else if (playerWeapon = 'shotgun' {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
+    }
+}
+
+function equipMinigun() {
+    if (minigun.unlocked = true) {
+        playerWeapon = 'minigun';
+         updateHUD();
+    } else if (playerWeapon = 'minigun' {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
+    }
+}
+
+function equipSniper() {
+    if (sniper.unlocked = true) {
+        playerWeapon = 'sniper';
+         updateHUD();
+    } else if (playerWeapon = 'sniper' {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
+    }
+}
+
 // Key handling
 const keys = {};
 document.addEventListener('keydown', (e) => {
@@ -329,7 +373,7 @@ function buyShotgun() {
         const weapon = weapons[shotgun];
         playerCoins -= 100;
         playerWeapon = 'shotgun';
-        weapon.unlocked = true;
+        shotgun.unlocked = true;
         document.getElementById('shotgunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
@@ -342,7 +386,7 @@ function buyMinigun() {
         const weapon = weapons[minigun];
         playerCoins -= 500;
         playerWeapon = 'minigun';
-        weapon.unlocked = true;
+        minigun.unlocked = true;
         document.getElementById('minigunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
@@ -355,7 +399,7 @@ function buySniper() {
         const weapon = weapons[sniper];
         playerCoins -= 300;
         playerWeapon = 'sniper';
-        weapon.unlocked = true;
+        sniper.unlocked = true;
         document.getElementById('sniperStatus').innerText = 'Purchased';
         updateHUD();
     } else {
