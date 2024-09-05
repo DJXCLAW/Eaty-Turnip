@@ -5,7 +5,7 @@
 <br> WASD/Arrow keys: movement
 <br> Space: shoot
 <br> 
-<hr>
+<br> <h1>COPYRIGHT</h1>
 <br>bean, a in browser shooter game made using canvas and js
 <br>    Copyright (C) 2024 
 <br>DJXCLAW & chompypotato
