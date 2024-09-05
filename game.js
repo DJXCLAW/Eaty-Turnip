@@ -35,8 +35,8 @@ let waveNumber = 1;
 const FIRE_RATE = 200;
 const SHOTGUN_FIRE_RATE = 500;
 const MINIGUN_FIRE_RATE = 1;
-const SNIPER_FIRE_RATE = 1000;
-const SNIPER_PENETRATION = 3;
+const SNIPER_FIRE_RATE = 5000;
+const SNIPER_PENETRATION = 100;
 const ENEMY_SPAWN_RATE = 5;
 
 let gamePaused = false;
