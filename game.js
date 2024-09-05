@@ -15,7 +15,7 @@ const BASE_BULLET_SPEED = 8;
 const BASE_ENEMY_SPEED = 1;
 const DAMAGE_AMOUNT = 10;
 let playerCoins = 0;
-let playerWeapon = 'pistol';
+let playerWeapon = '1';
 let playerHp = 100;
 
 let player = {
@@ -38,6 +38,13 @@ const MINIGUN_FIRE_RATE = 1;
 const SNIPER_FIRE_RATE = 1000;
 const SNIPER_PENETRATION = 3;
 const ENEMY_SPAWN_RATE = 5;
+const weapons = {
+    pistol: 1,
+    shotgun: 2,
+    minigun: 3,
+    sniper: 4
+};
+
 
 let gamePaused = false;
 let gameOver = false;
