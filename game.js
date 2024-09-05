@@ -35,8 +35,8 @@ let waveNumber = 1;
 const FIRE_RATE = 200;
 const SHOTGUN_FIRE_RATE = 500;
 const MINIGUN_FIRE_RATE = 1;
-const SNIPER_FIRE_RATE = 5000;
-const SNIPER_PENETRATION = 100;
+const SNIPER_FIRE_RATE = 1000;
+const SNIPER_PENETRATION = 3;
 const ENEMY_SPAWN_RATE = 5;
 
 let gamePaused = false;
@@ -229,14 +229,6 @@ function spawnEnemies() {
     }
 }
 
-// Function to calculate the angle between the player and the mouse cursor
-function calculateAngleToMouse(mouseX, mouseY) {
-    const dx = mouseX - (player.x + player.width / 2);
-    const dy = mouseY - (player.y + player.height / 2);
-    return Math.atan2(dy, dx);
-}
-
-
 // Function to handle shooting
 function shoot() {
     const now = Date.now();
@@ -378,14 +370,13 @@ function showShop() {
     document.getElementById('shopContainer').style.display = 'flex';
 }
 
-
 // Function to close the shop UI
 function hideShop() {
     gamePaused = false;
     document.getElementById('shopContainer').style.display = 'none';
-
-    // Do not call gameLoop here because it's already running, just unpause
-}
+    if (!gameLoopRunning) {
+        gameLoop(); // Resume the game loop
+    }
 }
 
 // Event listener for mouse movement to update player angle
@@ -395,27 +386,24 @@ canvas.addEventListener('mousemove', (e) => {
 
 // Game loop
 function gameLoop() {
-    if (gameLoopRunning) {
-        return; // If the game loop is already running, don't start another loop
+    if (!gamePaused && !gameOver) {
+        gameLoopRunning = true; // Ensure we track that the loop is running
+        clearCanvas();
+        drawPlayer();
+        drawBullets();
+        drawEnemies();
+        updatePlayer();
+        updateBullets();
+        updateEnemies();
+        checkCollisions();
     }
 
-    gameLoopRunning = true; // Set to true so no other loop can start
-
-    function loop() {
-        if (!gamePaused && !gameOver) {
-            clearCanvas();
-            updatePlayer();
-            updateBullets();
-            updateEnemies();
-            checkCollisions();
-            drawPlayer();
-            drawBullets();
-            drawEnemies();
-            requestAnimationFrame(loop); // Keep the loop going if game is running
-        } else {
-            gameLoopRunning = false; // Reset the flag if game is paused or over
-        }
+    if (!gameOver) {
+        requestAnimationFrame(gameLoop);
+    } else {
+        gameLoopRunning = false; // Stop tracking the loop when the game is over
     }
-
-    loop(); // Start the loop
 }
+
+// Start the game loop
+gameLoop();
