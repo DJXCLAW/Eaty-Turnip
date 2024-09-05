@@ -386,6 +386,7 @@ function hideShop() {
 
     // Do not call gameLoop here because it's already running, just unpause
 }
+}
 
 // Event listener for mouse movement to update player angle
 canvas.addEventListener('mousemove', (e) => {
