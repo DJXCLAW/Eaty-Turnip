@@ -229,6 +229,14 @@ function spawnEnemies() {
     }
 }
 
+// Function to calculate the angle between the player and the mouse cursor
+function calculateAngleToMouse(mouseX, mouseY) {
+    const dx = mouseX - (player.x + player.width / 2);
+    const dy = mouseY - (player.y + player.height / 2);
+    return Math.atan2(dy, dx);
+}
+
+
 // Function to handle shooting
 function shoot() {
     const now = Date.now();
