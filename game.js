@@ -286,6 +286,69 @@ function shoot() {
     }
 }
 
+// Shop functions
+function buyHealthUpgrade() {
+    if (playerCoins >= 50) {
+        playerCoins -= 50;
+        player.hp = Math.min(player.hp + 50, playerHp);
+        updateHUD();
+    } else {
+        alert("Not enough coins!");
+    }
+}
+
+function buyBulletSpeedUpgrade() {
+    if (playerCoins >= 100) {
+        playerCoins -= 100;
+        BASE_BULLET_SPEED += 2;
+        updateHUD();
+    } else {
+        alert("Not enough coins!");
+    }
+}
+
+function buyPlayerSpeedUpgrade() {
+    if (playerCoins >= 100) {
+        playerCoins -= 100;
+        player.speed += 2;
+        updateHUD();
+    } else {
+        alert("Not enough coins!");
+    }
+}
+
+function buyShotgun() {
+    if (playerCoins >= 100) {
+        playerCoins -= 100;
+        playerWeapon = 'shotgun';
+        document.getElementById('shotgunStatus').innerText = 'Purchased';
+        updateHUD();
+    } else {
+        alert("Not enough coins!");
+    }
+}
+
+function buyMinigun() {
+    if (playerCoins >= 500) {
+        playerCoins -= 500;
+        playerWeapon = 'minigun';
+        document.getElementById('minigunStatus').innerText = 'Purchased';
+        updateHUD();
+    } else {
+        alert("Not enough coins!");
+    }
+}
+
+function buySniper() {
+    if (playerCoins >= 300) {
+        playerCoins -= 300;
+        playerWeapon = 'sniper';
+        document.getElementById('sniperStatus').innerText = 'Purchased';
+        updateHUD();
+    } else {
+        alert("Not enough coins!");
+    }
+}
 // Shop functions (buyHealthUpgrade, buyBulletSpeedUpgrade, etc. remain unchanged)
 
 // Function to end the game
