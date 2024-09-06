@@ -17,7 +17,6 @@ const DAMAGE_AMOUNT = 10;
 let playerCoins = 0;
 let playerWeapon = '1';
 let playerHp = 100;
-
 let player = {
     x: canvas.width / 2 - PLAYER_SIZE / 2,
     y: canvas.height - PLAYER_SIZE * 2,
@@ -407,15 +406,16 @@ function buySniper() {
     }
 }
 // Shop functions (buyHealthUpgrade, buyBulletSpeedUpgrade, etc. remain unchanged)
-
+let slotId = 1;
+let itemName = pistol;
 // Example function to add an item to a slot
 function addItemToSlot(slotId, itemName) {
     const slot = document.getElementById(slotId);
     slot.innerHTML = `<img src="/images/${eeeeeee}.png" alt="${placeholder}" style="width: 80%;">`;
 }
 
-// Example to add an item to slot 1
-addItemToSlot('slot1', 'shotgun');  // Assuming you have an image for 'shotgun'
+// add an item to slot 1
+addItemToSlot('slot1', 'pistol'); 
 
 
 // Function to end the game
