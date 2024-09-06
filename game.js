@@ -408,6 +408,16 @@ function buySniper() {
 }
 // Shop functions (buyHealthUpgrade, buyBulletSpeedUpgrade, etc. remain unchanged)
 
+// Example function to add an item to a slot
+function addItemToSlot(slotId, itemName) {
+    const slot = document.getElementById(slotId);
+    slot.innerHTML = `<img src="/images/${eeeeeee}.png" alt="${placeholder}" style="width: 80%;">`;
+}
+
+// Example to add an item to slot 1
+addItemToSlot('slot1', 'shotgun');  // Assuming you have an image for 'shotgun'
+
+
 // Function to end the game
 function endGame() {
     gameOver = true;
