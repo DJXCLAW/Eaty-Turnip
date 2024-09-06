@@ -26,7 +26,6 @@ let player = {
     hp: playerHp,
     angle: 0
 };
-let currentplayerWeapon ===1
 let bullets = [];
 let enemies = [];
 let lastFireTime = 0;
@@ -66,6 +65,48 @@ document.addEventListener('keydown', (e) => {
             showShop();
         }
     }
+       if (e.key === '1') {
+    if (pistol.unlocked === true) {
+        playerWeapon = 'pistol';
+    } else if (playerWeapon === 'pistol') {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
+    }
+}
+
+if (e.key === '2') {
+    if (shotgun.unlocked === true) {
+        playerWeapon = 'shotgun';
+         updateHUD();
+    } else if (playerWeapon === 'shotgun') {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
+    }
+}
+
+if (e.key === '3') {
+    if (minigun.unlocked === true) {
+        playerWeapon = 'minigun';
+         updateHUD();
+    } else if (playerWeapon === 'minigun') {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
+    }
+}
+
+if (e.key === '4') {
+    if (sniper.unlocked === true) {
+        playerWeapon = 'sniper';
+         updateHUD();
+    } else if (playerWeapon === 'sniper') {
+        alert("Already equip!");
+    } else {
+        alert("Not purchased!");
+    }
+}
 });
 
 document.addEventListener('keyup', (e) => {
@@ -292,48 +333,6 @@ function shoot() {
     }
 }
 
-   if (e.key === '1') {
-    if (pistol.unlocked === true) {
-        playerWeapon = 'pistol';
-    } else if (playerWeapon === 'pistol') {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
-    }
-}
-
-if (e.key === '2') {
-    if (shotgun.unlocked === true) {
-        playerWeapon = 'shotgun';
-         updateHUD();
-    } else if (playerWeapon === 'shotgun') {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
-    }
-}
-
-if (e.key === '3') {
-    if (minigun.unlocked === true) {
-        playerWeapon = 'minigun';
-         updateHUD();
-    } else if (playerWeapon === 'minigun') {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
-    }
-}
-
-if (e.key === '4') {
-    if (sniper.unlocked === true) {
-        playerWeapon = 'sniper';
-         updateHUD();
-    } else if (playerWeapon === 'sniper') {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
-    }
-}
 
 // Shop functions
 function buyHealthUpgrade() {
