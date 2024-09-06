@@ -1,4 +1,4 @@
-<br> Currently in dev mode so you spawn with a lot of money for testing purposes (i forgor to put it back sowee :c )
+<br> Currently in dev mode so you spawn with a lot of money for testing purposes :D
 <br>
 <br> <h1>CONTROLS</h1>
 <br> Enter: shop
