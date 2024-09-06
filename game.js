@@ -14,8 +14,8 @@ const BASE_PLAYER_SPEED = 5;
 const BASE_BULLET_SPEED = 8;
 const BASE_ENEMY_SPEED = 1;
 const DAMAGE_AMOUNT = 10;
-let playerCoins = 0;
-let playerWeapon = '1';
+let playerCoins = 9999999;
+let playerWeapon = 'pistol'; // Default weapon
 let playerHp = 100;
 let player = {
     x: canvas.width / 2 - PLAYER_SIZE / 2,
@@ -37,12 +37,11 @@ const SNIPER_FIRE_RATE = 1000;
 const SNIPER_PENETRATION = 3;
 const ENEMY_SPAWN_RATE = 5;
 const weapons = {
-    pistol: { id: 1, cost: 500, unlocked: true },
-    shotgun: { id: 2, cost: 1000, unlocked: false },
-    minigun: { id: 3, cost: 200, unlocked: false },
-    sniper: { id: 4, cost: 700, unlocked: false }
+    pistol: { id: 1, cost: 0, unlocked: true }, // Pistol is unlocked by default
+    shotgun: { id: 2, cost: 100, unlocked: false },
+    minigun: { id: 3, cost: 500, unlocked: false },
+    sniper: { id: 4, cost: 300, unlocked: false }
 };
-
 
 let gamePaused = false;
 let gameOver = false;
@@ -65,48 +64,29 @@ document.addEventListener('keydown', (e) => {
             showShop();
         }
     }
-       if (e.key === '1') {
-    if (weapons.pistol.unlocked === true) {
-        playerWeapon = 'pistol';
-    } else if (playerWeapon === 'pistol') {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
-    }
-}
 
-if (e.key === '2') {
-    if (weapons.shotgun.unlocked === true) {
-        playerWeapon = 'shotgun';
-         updateHUD();
-    } else if (playerWeapon === 'shotgun') {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
-    }
-}
+    // Handle weapon switching
+    if (e.key >= '1' && e.key <= '4') {
+        let weaponKey;
+        if (e.key === '1') weaponKey = 'pistol';
+        if (e.key === '2') weaponKey = 'shotgun';
+        if (e.key === '3') weaponKey = 'minigun';
+        if (e.key === '4') weaponKey = 'sniper';
 
-if (e.key === '3') {
-    if (weapons.minigun.unlocked === true) {
-        playerWeapon = 'minigun';
-         updateHUD();
-    } else if (playerWeapon === 'minigun') {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
+        const weapon = weapons[weaponKey];
+        if (weapon) {
+            if (weapon.unlocked) {
+                if (playerWeapon !== weaponKey) {
+                    playerWeapon = weaponKey;
+                    updateHUD();
+                } else {
+                    alert("Already equipped!");
+                }
+            } else {
+                alert("Not purchased!");
+            }
+        }
     }
-}
-
-if (e.key === '4') {
-    if (weapons.sniper.unlocked === true) {
-        playerWeapon = 'sniper';
-         updateHUD();
-    } else if (playerWeapon === 'sniper') {
-        alert("Already equip!");
-    } else {
-        alert("Not purchased!");
-    }
-}
 });
 
 document.addEventListener('keyup', (e) => {
@@ -366,11 +346,11 @@ function buyPlayerSpeedUpgrade() {
 }
 
 function buyShotgun() {
-    if (playerCoins >= 100) {
-        const weapon = weapons['shotgun'];
-        playerCoins -= 100;
+    const weapon = weapons['shotgun'];
+    if (playerCoins >= weapon.cost) {
+        playerCoins -= weapon.cost;
+        weapon.unlocked = true;
         playerWeapon = 'shotgun';
-        weapons.shotgun.unlocked = true;
         document.getElementById('shotgunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
@@ -379,11 +359,11 @@ function buyShotgun() {
 }
 
 function buyMinigun() {
-    if (playerCoins >= 500) {
-        const weapon = weapons['minigun'];
-        playerCoins -= 500;
+    const weapon = weapons['minigun'];
+    if (playerCoins >= weapon.cost) {
+        playerCoins -= weapon.cost;
+        weapon.unlocked = true;
         playerWeapon = 'minigun';
-        weapons.minigun.unlocked = true;
         document.getElementById('minigunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
@@ -392,11 +372,11 @@ function buyMinigun() {
 }
 
 function buySniper() {
-    if (playerCoins >= 300) {
-        const weapon = weapons['sniper'];
-        playerCoins -= 300;
+    const weapon = weapons['sniper'];
+    if (playerCoins >= weapon.cost) {
+        playerCoins -= weapon.cost;
+        weapon.unlocked = true;
         playerWeapon = 'sniper';
-        weapons.sniper.unlocked = true;
         document.getElementById('sniperStatus').innerText = 'Purchased';
         updateHUD();
     } else {
@@ -471,4 +451,3 @@ function gameLoop() {
 
 // Start the game loop
 gameLoop();
-
