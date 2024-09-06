@@ -66,7 +66,7 @@ document.addEventListener('keydown', (e) => {
         }
     }
        if (e.key === '1') {
-    if (pistol.unlocked === true) {
+    if (weapons.pistol.unlocked === true) {
         playerWeapon = 'pistol';
     } else if (playerWeapon === 'pistol') {
         alert("Already equip!");
@@ -76,7 +76,7 @@ document.addEventListener('keydown', (e) => {
 }
 
 if (e.key === '2') {
-    if (shotgun.unlocked === true) {
+    if (weapons.shotgun.unlocked === true) {
         playerWeapon = 'shotgun';
          updateHUD();
     } else if (playerWeapon === 'shotgun') {
@@ -87,7 +87,7 @@ if (e.key === '2') {
 }
 
 if (e.key === '3') {
-    if (minigun.unlocked === true) {
+    if (weapons.minigun.unlocked === true) {
         playerWeapon = 'minigun';
          updateHUD();
     } else if (playerWeapon === 'minigun') {
@@ -98,7 +98,7 @@ if (e.key === '3') {
 }
 
 if (e.key === '4') {
-    if (sniper.unlocked === true) {
+    if (weapons.sniper.unlocked === true) {
         playerWeapon = 'sniper';
          updateHUD();
     } else if (playerWeapon === 'sniper') {
