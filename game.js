@@ -137,8 +137,12 @@ function drawEnemyBullets() {
 
 // Function to draw enemies
 function drawEnemies() {
-    ctx.fillStyle = 'red';
     enemies.forEach(enemy => {
+        if (enemy.health === MANIAC_HEALTH) {
+            ctx.fillStyle = 'purple'; // Maniac enemy color
+        } else {
+            ctx.fillStyle = 'red'; // Regular enemy color
+        }
         ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
     });
 }
@@ -212,6 +216,26 @@ function updateEnemies() {
         enemyShoot(enemy);
     });
 }
+//Enemy Types
+
+//Maniac Data
+const MANIAC_SIZE = 32;
+const MANIAC_SPEED = 10; // High speed
+const MANIAC_DAMAGE = 20; // High damage
+const MANIAC_HEALTH = 1; // Low HP
+const MANIAC_SHOTGUN_FIRE_RATE = 1500; // Fire rate for shotgun attacks
+
+// Initialize a Maniac enemy template
+const MANIAC_TEMPLATE = {
+    width: MANIAC_SIZE,
+    height: MANIAC_SIZE,
+    speed: MANIAC_SPEED,
+    health: MANIAC_HEALTH,
+    damage: MANIAC_DAMAGE,
+    fireRate: MANIAC_SHOTGUN_FIRE_RATE,
+    lastShotTime: Date.now()
+};
+
 
 // Function to handle enemy shooting
 function enemyShoot(enemy) {
@@ -226,20 +250,38 @@ function enemyShoot(enemy) {
         const vy = (dy / distance) * BASE_BULLET_SPEED;
 
         // Create a bullet fired by the enemy
-        const bullet = {
-            x: enemy.x + enemy.width / 2,
-            y: enemy.y + enemy.height / 2,
-            vx: vx,
-            vy: vy,
-            width: BULLET_SIZE,
-            height: BULLET_SIZE,
-            damage: 10 // Enemy bullet damage
-        };
+        if (enemy.health === MANIAC_HEALTH) {
+            // Maniac fires shotgun bullets
+            for (let i = -1; i <= 1; i++) {
+                const angleOffset = (Math.PI / 12) * i;
+                const angle = Math.atan2(dy, dx) + angleOffset;
+                enemyBullets.push({
+                    x: enemy.x + enemy.width / 2,
+                    y: enemy.y + enemy.height / 2,
+                    vx: Math.cos(angle) * BASE_BULLET_SPEED,
+                    vy: Math.sin(angle) * BASE_BULLET_SPEED,
+                    width: BULLET_SIZE,
+                    height: BULLET_SIZE,
+                    damage: enemy.damage
+                });
+            }
+        } else {
+            // Regular enemy bullet
+            enemyBullets.push({
+                x: enemy.x + enemy.width / 2,
+                y: enemy.y + enemy.height / 2,
+                vx: vx,
+                vy: vy,
+                width: BULLET_SIZE,
+                height: BULLET_SIZE,
+                damage: 10
+            });
+        }
 
-        enemyBullets.push(bullet);
-        enemy.lastShotTime = now; // Reset shot timer
+        enemy.lastShotTime = now;
     }
 }
+
 
 // Function to check for collisions and enemy defeat
 function checkCollisions() {
@@ -295,41 +337,39 @@ function checkCollisions() {
 function spawnEnemies() {
     for (let i = 0; i < ENEMY_SPAWN_RATE * waveNumber; i++) {
         const edge = Math.floor(Math.random() * 4);
-
         let x, y;
 
-        switch (edge) {
-            case 0:
-                x = Math.random() * canvas.width;
-                y = -ENEMY_SIZE;
-                break;
-            case 1:
-                x = canvas.width;
-                y = Math.random() * canvas.height;
-                break;
-            case 2:
-                x = Math.random() * canvas.width;
-                y = canvas.height;
-                break;
-            case 3:
-                x = -ENEMY_SIZE;
-                y = Math.random() * canvas.height;
-                break;
+        // Randomly decide if the enemy should be a Maniac or a regular enemy
+        const isManiac = Math.random() < 0.1; // 10% chance of spawning a Maniac
+
+        if (edge === 0) {
+            x = Math.random() * canvas.width;
+            y = -ENEMY_SIZE;
+        } else if (edge === 1) {
+            x = canvas.width;
+            y = Math.random() * canvas.height;
+        } else if (edge === 2) {
+            x = Math.random() * canvas.width;
+            y = canvas.height;
+        } else if (edge === 3) {
+            x = -ENEMY_SIZE;
+            y = Math.random() * canvas.height;
         }
 
-        const enemy = {
+        const enemy = isManiac ? { ...MANIAC_TEMPLATE, x, y } : {
             x: x,
             y: y,
             width: ENEMY_SIZE,
             height: ENEMY_SIZE,
             health: 5,
-            lastShotTime: Date.now(), // Initialize last shot time
-            fireRate: 2000 // Example fire rate, change as needed
+            lastShotTime: Date.now(),
+            fireRate: 2000 // Default fire rate for non-Maniac enemies
         };
 
         enemies.push(enemy);
     }
 }
+
 
 // Function to handle shooting
 function shoot() {
