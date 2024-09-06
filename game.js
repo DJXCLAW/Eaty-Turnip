@@ -293,7 +293,6 @@ function shoot() {
 }
 
    if (e.key === '1') {
-function equipPistol() {
     if (pistol.unlocked === true) {
         playerWeapon = 'pistol';
     } else if (playerWeapon === 'pistol') {
@@ -302,10 +301,8 @@ function equipPistol() {
         alert("Not purchased!");
     }
 }
-}
 
 if (e.key === '2') {
-function equipShotgun() {
     if (shotgun.unlocked === true) {
         playerWeapon = 'shotgun';
          updateHUD();
@@ -315,10 +312,8 @@ function equipShotgun() {
         alert("Not purchased!");
     }
 }
-}
 
 if (e.key === '3') {
-function equipMinigun() {
     if (minigun.unlocked === true) {
         playerWeapon = 'minigun';
          updateHUD();
@@ -328,10 +323,8 @@ function equipMinigun() {
         alert("Not purchased!");
     }
 }
-}
 
 if (e.key === '4') {
-function equipSniper() {
     if (sniper.unlocked === true) {
         playerWeapon = 'sniper';
          updateHUD();
@@ -340,7 +333,6 @@ function equipSniper() {
     } else {
         alert("Not purchased!");
     }
-}
 }
 
 // Shop functions
