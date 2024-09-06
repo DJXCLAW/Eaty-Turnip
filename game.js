@@ -370,7 +370,7 @@ function buyShotgun() {
         const weapon = weapons['shotgun'];
         playerCoins -= 100;
         playerWeapon = 'shotgun';
-        shotgun.unlocked = true;
+        weapons.shotgun.unlocked = true;
         document.getElementById('shotgunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
@@ -383,7 +383,7 @@ function buyMinigun() {
         const weapon = weapons['minigun'];
         playerCoins -= 500;
         playerWeapon = 'minigun';
-        minigun.unlocked = true;
+        weapons.minigun.unlocked = true;
         document.getElementById('minigunStatus').innerText = 'Purchased';
         updateHUD();
     } else {
@@ -396,7 +396,7 @@ function buySniper() {
         const weapon = weapons['sniper'];
         playerCoins -= 300;
         playerWeapon = 'sniper';
-        sniper.unlocked = true;
+        weapons.sniper.unlocked = true;
         document.getElementById('sniperStatus').innerText = 'Purchased';
         updateHUD();
     } else {
