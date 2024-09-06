@@ -345,43 +345,35 @@ function buyPlayerSpeedUpgrade() {
     }
 }
 
-function buyShotgun() {
-    const weapon = weapons['shotgun'];
-    if (playerCoins >= weapon.cost) {
-        playerCoins -= weapon.cost;
-        weapon.unlocked = true;
-        playerWeapon = 'shotgun';
-        document.getElementById('shotgunStatus').innerText = 'Purchased';
+function buyWeapon(weaponKey) {
+    const weapon = weapons[weaponKey]; // Get the weapon object from weapons list
+
+    // Check if the player has enough coins and the weapon is not unlocked
+    if (playerCoins >= weapon.cost && !weapon.unlocked) {
+        playerCoins -= weapon.cost; // Deduct the weapon cost from player coins
+        weapon.unlocked = true;     // Unlock the weapon
+        playerWeapon = weaponKey;   // Equip the purchased weapon
+
+        // Update the status on the UI and update the HUD
+        document.getElementById(`${weaponKey}Status`).innerText = 'Purchased';
         updateHUD();
+    } else if (weapon.unlocked) {
+        alert("Already purchased!");
     } else {
         alert("Not enough coins!");
     }
+}
+
+function buyShotgun() {
+    buyWeapon('shotgun');
 }
 
 function buyMinigun() {
-    const weapon = weapons['minigun'];
-    if (playerCoins >= weapon.cost) {
-        playerCoins -= weapon.cost;
-        weapon.unlocked = true;
-        playerWeapon = 'minigun';
-        document.getElementById('minigunStatus').innerText = 'Purchased';
-        updateHUD();
-    } else {
-        alert("Not enough coins!");
-    }
+    buyWeapon('minigun');
 }
 
 function buySniper() {
-    const weapon = weapons['sniper'];
-    if (playerCoins >= weapon.cost) {
-        playerCoins -= weapon.cost;
-        weapon.unlocked = true;
-        playerWeapon = 'sniper';
-        document.getElementById('sniperStatus').innerText = 'Purchased';
-        updateHUD();
-    } else {
-        alert("Not enough coins!");
-    }
+    buyWeapon('sniper');
 }
 
 
