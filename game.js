@@ -412,17 +412,6 @@ function buySniper() {
         alert("Not enough coins!");
     }
 }
-// Shop functions (buyHealthUpgrade, buyBulletSpeedUpgrade, etc. remain unchanged)
-let slotId = 1;
-let itemName = pistol;
-// Example function to add an item to a slot
-function addItemToSlot(slotId, itemName) {
-    const slot = document.getElementById(slotId);
-    slot.innerHTML = `<img src="/images/${eeeeeee}.png" alt="${placeholder}" style="width: 80%;">`;
-}
-
-// add an item to slot 1
-addItemToSlot('slot1', 'pistol'); 
 
 
 // Function to end the game
