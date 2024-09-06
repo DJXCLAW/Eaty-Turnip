@@ -14,6 +14,13 @@ const BASE_PLAYER_SPEED = 5;
 const BASE_BULLET_SPEED = 8;
 const BASE_ENEMY_SPEED = 1;
 const DAMAGE_AMOUNT = 10;
+const ENEMY_SPAWN_RATE = 5;
+const FIRE_RATE = 200;
+const SHOTGUN_FIRE_RATE = 500;
+const MINIGUN_FIRE_RATE = 1;
+const SNIPER_FIRE_RATE = 1000;
+const SNIPER_PENETRATION = 3;
+
 let playerCoins = 9999999;
 let playerWeapon = 'pistol'; // Default weapon
 let playerHp = 100;
@@ -26,16 +33,13 @@ let player = {
     hp: playerHp,
     angle: 0
 };
+
 let bullets = [];
+let enemyBullets = [];
 let enemies = [];
 let lastFireTime = 0;
 let waveNumber = 1;
-const FIRE_RATE = 200;
-const SHOTGUN_FIRE_RATE = 500;
-const MINIGUN_FIRE_RATE = 1;
-const SNIPER_FIRE_RATE = 1000;
-const SNIPER_PENETRATION = 3;
-const ENEMY_SPAWN_RATE = 5;
+
 const weapons = {
     pistol: { id: 1, cost: 0, unlocked: true }, // Pistol is unlocked by default
     shotgun: { id: 2, cost: 100, unlocked: false },
@@ -123,6 +127,14 @@ function drawBullets() {
     });
 }
 
+// Function to draw enemy bullets
+function drawEnemyBullets() {
+    ctx.fillStyle = 'red'; // Enemy bullets color
+    enemyBullets.forEach(bullet => {
+        ctx.fillRect(bullet.x, bullet.y, BULLET_SIZE, BULLET_SIZE);
+    });
+}
+
 // Function to draw enemies
 function drawEnemies() {
     ctx.fillStyle = 'red';
@@ -156,6 +168,36 @@ function updateBullets() {
     });
 }
 
+// Function to update the enemy bullets' positions
+function updateEnemyBullets() {
+    enemyBullets = enemyBullets.filter(bullet => bullet.x > 0 && bullet.x < canvas.width && bullet.y > 0 && bullet.y < canvas.height);
+    enemyBullets.forEach(bullet => {
+        bullet.x += bullet.vx;
+        bullet.y += bullet.vy;
+
+        // Check if the bullet hits the player
+        if (
+            bullet.x < player.x + player.width &&
+            bullet.x + BULLET_SIZE > player.x &&
+            bullet.y < player.y + player.height &&
+            bullet.y + BULLET_SIZE > player.y
+        ) {
+            player.hp -= bullet.damage;
+            updateHUD();
+
+            if (player.hp <= 0) {
+                endGame();
+            }
+
+            // Remove the bullet after hitting the player
+            const bulletIndex = enemyBullets.indexOf(bullet);
+            if (bulletIndex > -1) {
+                enemyBullets.splice(bulletIndex, 1);
+            }
+        }
+    });
+}
+
 // Function to update the enemies' positions
 function updateEnemies() {
     enemies.forEach(enemy => {
@@ -165,7 +207,38 @@ function updateEnemies() {
 
         enemy.x += (dx / distance) * BASE_ENEMY_SPEED;
         enemy.y += (dy / distance) * BASE_ENEMY_SPEED;
+
+        // Enemy shooting logic
+        enemyShoot(enemy);
     });
+}
+
+// Function to handle enemy shooting
+function enemyShoot(enemy) {
+    const now = Date.now();
+    if (now - enemy.lastShotTime > enemy.fireRate) {
+        const dx = player.x + player.width / 2 - (enemy.x + enemy.width / 2);
+        const dy = player.y + player.height / 2 - (enemy.y + enemy.height / 2);
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Calculate the bullet velocity
+        const vx = (dx / distance) * BASE_BULLET_SPEED;
+        const vy = (dy / distance) * BASE_BULLET_SPEED;
+
+        // Create a bullet fired by the enemy
+        const bullet = {
+            x: enemy.x + enemy.width / 2,
+            y: enemy.y + enemy.height / 2,
+            vx: vx,
+            vy: vy,
+            width: BULLET_SIZE,
+            height: BULLET_SIZE,
+            damage: 10 // Enemy bullet damage
+        };
+
+        enemyBullets.push(bullet);
+        enemy.lastShotTime = now; // Reset shot timer
+    }
 }
 
 // Function to check for collisions and enemy defeat
@@ -200,9 +273,9 @@ function checkCollisions() {
 
     enemies.forEach((enemy, enemyIndex) => {
         if (player.x < enemy.x + enemy.width &&
-            player.x + player.width > enemy.x &&
-            player.y < enemy.y + enemy.height &&
-            player.y + player.height > enemy.y) {
+        player.x + player.width > enemy.x &&
+        player.y < enemy.y + enemy.height &&
+        player.y + player.height > enemy.y) {
             player.hp -= DAMAGE_AMOUNT;
             updateHUD();
             enemies.splice(enemyIndex, 1);
@@ -249,7 +322,9 @@ function spawnEnemies() {
             y: y,
             width: ENEMY_SIZE,
             height: ENEMY_SIZE,
-            health: 5
+            health: 5,
+            lastShotTime: Date.now(), // Initialize last shot time
+            fireRate: 2000 // Example fire rate, change as needed
         };
 
         enemies.push(enemy);
@@ -313,7 +388,6 @@ function shoot() {
     }
 }
 
-
 // Shop functions
 function buyHealthUpgrade() {
     if (playerCoins >= 50) {
@@ -376,7 +450,6 @@ function buySniper() {
     buyWeapon('sniper');
 }
 
-
 // Function to end the game
 function endGame() {
     gameOver = true;
@@ -427,10 +500,12 @@ function gameLoop() {
                 clearCanvas();
                 updatePlayer();
                 updateBullets();
+                updateEnemyBullets();
                 updateEnemies();
                 checkCollisions();
                 drawPlayer();
                 drawBullets();
+                drawEnemyBullets();
                 drawEnemies();
                 requestAnimationFrame(loop);
             } else {
