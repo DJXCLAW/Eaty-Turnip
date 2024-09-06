@@ -26,7 +26,7 @@ let player = {
     hp: playerHp,
     angle: 0
 };
-
+let currentplayerWeapon ===1
 let bullets = [];
 let enemies = [];
 let lastFireTime = 0;
@@ -292,17 +292,19 @@ function shoot() {
     }
 }
 
+   if (e.key === '1') {
 function equipPistol() {
     if (pistol.unlocked === true) {
         playerWeapon = 'pistol';
-         updateHUD();
     } else if (playerWeapon === 'pistol') {
         alert("Already equip!");
     } else {
         alert("Not purchased!");
     }
 }
+}
 
+if (e.key === '2') {
 function equipShotgun() {
     if (shotgun.unlocked === true) {
         playerWeapon = 'shotgun';
@@ -313,7 +315,9 @@ function equipShotgun() {
         alert("Not purchased!");
     }
 }
+}
 
+if (e.key === '3') {
 function equipMinigun() {
     if (minigun.unlocked === true) {
         playerWeapon = 'minigun';
@@ -324,7 +328,9 @@ function equipMinigun() {
         alert("Not purchased!");
     }
 }
+}
 
+if (e.key === '4') {
 function equipSniper() {
     if (sniper.unlocked === true) {
         playerWeapon = 'sniper';
@@ -334,6 +340,7 @@ function equipSniper() {
     } else {
         alert("Not purchased!");
     }
+}
 }
 
 // Shop functions
