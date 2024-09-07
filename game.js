@@ -210,26 +210,19 @@ const SHOOTER_TEMPLATE = {
     health: SHOOTER_HEALTH,
     lastShotTime: Date.now(),
     fireRate: SHOOTER_FIRE_RATE,
-    isShooter: true // Flag to identify shooting enemies
+    isShooter: true // This flag distinguishes shooter enemies
 };
 
-// Rammer enemy template
+// Rammer enemy template (no shooting)
 const RAMMER_TEMPLATE = {
     width: ENEMY_SIZE,
     height: ENEMY_SIZE,
     speed: BASE_ENEMY_SPEED,
     health: RAMMER_HEALTH,
-    isShooter: false // Rammer does not shoot
+    isShooter: false
 };
 
-//Maniac Data
-const MANIAC_SIZE = 32;
-const MANIAC_SPEED = 10; // High speed
-const MANIAC_DAMAGE = 20; // High damage
-const MANIAC_HEALTH = 1; // Low HP
-const MANIAC_SHOTGUN_FIRE_RATE = 1500; // Fire rate for shotgun attacks
-
-// Initialize a Maniac enemy template
+// Maniac enemy template (shotgun-style shooting)
 const MANIAC_TEMPLATE = {
     width: MANIAC_SIZE,
     height: MANIAC_SIZE,
@@ -237,34 +230,37 @@ const MANIAC_TEMPLATE = {
     health: MANIAC_HEALTH,
     damage: MANIAC_DAMAGE,
     fireRate: MANIAC_SHOTGUN_FIRE_RATE,
-    lastShotTime: Date.now()
+    lastShotTime: Date.now(),
+    isShooter: true // Maniac also shoots, but with shotgun style
 };
 
+// Function to spawn enemies
+function spawnEnemies() {
+    for (let i = 0; i < ENEMY_SPAWN_RATE * waveNumber; i++) {
+        // Random position on the edge of the canvas
+        const edge = Math.floor(Math.random() * 4);
+        let x, y;
+        switch (edge) {
+            case 0: x = Math.random() * canvas.width; y = -ENEMY_SIZE; break;
+            case 1: x = canvas.width; y = Math.random() * canvas.height; break;
+            case 2: x = Math.random() * canvas.width; y = canvas.height; break;
+            case 3: x = -ENEMY_SIZE; y = Math.random() * canvas.height; break;
+        }
 
-// Function to handle enemy shooting
-function enemyShoot(enemy) {
-    const now = Date.now();
-    if (now - enemy.lastShotTime > enemy.fireRate) {
-        const dx = player.x + player.width / 2 - (enemy.x + enemy.width / 2);
-        const dy = player.y + player.height / 2 - (enemy.y + enemy.height / 2);
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const vx = (dx / distance) * BASE_BULLET_SPEED;
-        const vy = (dy / distance) * BASE_BULLET_SPEED;
+        // Randomly assign enemy type (50% shooter, 50% rammer, 10% maniac)
+        const isManiac = Math.random() < 0.1;
+        const isShooter = !isManiac && Math.random() < 0.5;
+        
+        const enemy = isManiac
+            ? { ...MANIAC_TEMPLATE, x, y }
+            : isShooter
+                ? { ...SHOOTER_TEMPLATE, x, y }
+                : { ...RAMMER_TEMPLATE, x, y };
 
-        const bullet = {
-            x: enemy.x + enemy.width / 2,
-            y: enemy.y + enemy.height / 2,
-            vx: vx,
-            vy: vy,
-            width: BULLET_SIZE,
-            height: BULLET_SIZE,
-            damage: 10 // Enemy bullet damage
-        };
-
-        enemyBullets.push(bullet);
-        enemy.lastShotTime = now;
+        enemies.push(enemy);
     }
 }
+
 
         // Create a bullet fired by the enemy
         const bullet = {
