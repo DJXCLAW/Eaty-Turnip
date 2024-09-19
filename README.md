@@ -1,4 +1,4 @@
-<br> ALERT
+<br> <h1>ALERT</h1>
 <br> BEAN IS NOW ON GLITCH: 
 <br> SITE: https://bean-glitch-version.glitch.me
 <br> CODE: https://glitch.com/edit/#!/bean-glitch-version
