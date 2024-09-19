@@ -1,6 +1,7 @@
-<br> <b>ALERT<b> (nvm the second I post this everything is fixed 💀)
-<br>
-<br> updates will be coming out slower now becuase of technical difficulties. The project may soon appear on glitch, the link will be provided if that happens
+<br> ALERT
+<br> BEAN IS NOW ON GLITCH: 
+<br> SITE: https://bean-glitch-version.glitch.me
+<br> CODE: https://glitch.com/edit/#!/bean-glitch-version
 <br> <h2>CONTROLS</h2>
 <br> Enter: shop
 <br> WASD/Arrow keys: movement
