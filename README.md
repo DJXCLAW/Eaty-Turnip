@@ -1,6 +1,6 @@
-<h1> ALERT
+<h1> ALERT (nvm the second I post this everything is fixed 💀)
 <br>
-<br> <p1>updates will be coming out slower now becuase of technical difficulties. The project may soon appear on glitch, the link will be provided if that happens</p1>
+<br> updates will be coming out slower now becuase of technical difficulties. The project may soon appear on glitch, the link will be provided if that happens
 <br> <h2>CONTROLS</h2>
 <br> Enter: shop
 <br> WASD/Arrow keys: movement
