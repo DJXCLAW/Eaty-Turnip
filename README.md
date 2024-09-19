@@ -1,4 +1,4 @@
-<h1> ALERT (nvm the second I post this everything is fixed 💀)
+<br> <b>ALERT<b> (nvm the second I post this everything is fixed 💀)
 <br>
 <br> updates will be coming out slower now becuase of technical difficulties. The project may soon appear on glitch, the link will be provided if that happens
 <br> <h2>CONTROLS</h2>
