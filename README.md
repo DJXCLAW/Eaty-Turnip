@@ -1,5 +1,5 @@
-<br> Currently in dev mode so you spawn with a lot of money for testing purposes :D
-<br>
+<h1> ALERT
+<br> <p1>updates will be coming out slower now becuase of technical difficulties. The project may soon appear on glitch, the link will be provided if that happens</p1>
 <br> <h1>CONTROLS</h1>
 <br> Enter: shop
 <br> WASD/Arrow keys: movement
