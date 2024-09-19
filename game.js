@@ -177,42 +177,51 @@ function checkCollisions() {
                 bullet.y < enemy.y + enemy.height &&
                 bullet.y + BULLET_SIZE > enemy.y) {
 
-                let damage = playerWeapon === 'shotgun' ? 3 : 2;
-                if (playerWeapon === 'sniper') {
+                let damage = 2; // Default damage
+                
+                // Adjust weapon-specific damage
+                if (playerWeapon === 'shotgun') {
+                    damage = 3;
+                } else if (playerWeapon === 'sniper') {
                     damage = 5;
+                } else if (playerWeapon === 'minigun') {
+                    damage = 0.5; // Reduced damage for the minigun
                 }
+                
                 enemy.health -= damage;
 
                 if (playerWeapon === 'sniper' && bullet.penetration > 1) {
-                    bullet.penetration--;
+                    bullet.penetration--; // Sniper retains bullet penetration
                 } else {
-                    bullets.splice(bulletIndex, 1);
+                    bullets.splice(bulletIndex, 1); // Remove bullet after hitting
                 }
 
                 if (enemy.health <= 0) {
-                    enemies.splice(enemyIndex, 1);
-                    playerCoins += 10;
-                    updateHUD();
+                    enemies.splice(enemyIndex, 1); // Remove defeated enemy
+                    playerCoins += 10; // Reward player
+                    updateHUD(); // Update score
                 }
             }
         });
     });
 
+    // Handle enemy collision with player
     enemies.forEach((enemy, enemyIndex) => {
         if (player.x < enemy.x + enemy.width &&
             player.x + player.width > enemy.x &&
             player.y < enemy.y + enemy.height &&
             player.y + player.height > enemy.y) {
-            player.hp -= DAMAGE_AMOUNT;
+            player.hp -= DAMAGE_AMOUNT; // Player takes damage
             updateHUD();
-            enemies.splice(enemyIndex, 1);
+            enemies.splice(enemyIndex, 1); // Remove enemy
 
             if (player.hp <= 0) {
-                endGame();
+                endGame(); // End the game if player HP is 0
             }
         }
     });
 
+    // Start next wave if all enemies are defeated
     if (enemies.length === 0 && !gameOver) {
         nextWave();
     }
