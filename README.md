@@ -1,5 +1,5 @@
 <br> <h1>ALERT</h1>
-<br> BEAN IS NOW ON GLITCH: 
+<br> BEAN IS NOW ON GLITCH : (in fact we might officially move it there because of speed)
 <br> SITE: https://bean-glitch-version.glitch.me
 <br> CODE: https://glitch.com/edit/#!/bean-glitch-version
 <br> <h2>CONTROLS</h2>
