@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="https://cdn.glitch.global/fadba06a-53b9-4278-aed7-4c499cf944a0/favicon%20(11).ico?v=1730474488696">
+    <audio autoplay loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hack arena (QOL update)</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background-color: #000;
+        font-family: 'Press start 2p', sans-serif;
+cursor: url('https://cdn.glitch.global/fadba06a-53b9-4278-aed7-4c499cf944a0/cursor%20(11).cur?v=1730567567769'), auto;}
+      }
+      canvas {
+        display: block;
+        user-select: none;
+      }
+      #score,
+      #health,
+      #currency,
+      #level,
+      #gameOver {
+        position: absolute;
+        color: white;
+        font-size: 20px;
+        top: 10px;
+        user-select: none;
+      }
+      #score {
+        left: 10px;
+      }
+      #health {
+        font-size: 30px;
+        left: 10px;
+        top: 40px;
+        color: red;
+        font-weight: bold;
+      }
+      #currency {
+        left: 10px;
+        top: 80px;
+      }
+      #level {
+        left: 10px;
+        top: 110px;
+      }
+      #gameOver {
+        display: none;
+        top: 140px;
+        left: 10px;
+        font-size: 50px;
+        color: red;
+      }
+      #shopContainer {
+        cursor: url('https://cdn.glitch.global/fadba06a-53b9-4278-aed7-4c499cf944a0/cursor%20(9).cur?v=1730565546290'), auto;
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        color: white;
+        text-align: center;
+        padding-top: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow-y: auto; /* Enables scrolling */
+      }
+      #shopContainer .shop-item {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        width: 300px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 10px;
+
+      }
+      #shopContainer .shop-button {
+        padding: 8px 15px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+  cursor: url('https://cdn.glitch.global/fadba06a-53b9-4278-aed7-4c499cf944a0/cursor%20(8).cur?v=1730565512807'), auto;
+                font-family: 'Press start 2p', sans-serif;
+
+      }
+      #shopContainer .shop-button:hover {
+        background-color: #218838;
+      }
+      #shopContainer .shop-item span {
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <div id="score">Score: 0</div>
+    <div id="health">HP: 100</div>
+    <div id="currency">Currency: 0</div>
+    <div id="level">Level: 0</div>
+    <div id="gameOver">Game Over</div>
+
+    <div id="shopContainer">
+      <div class="shop-item">
+        Heal HP (+50) ($50)
+        <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button>
+      </div>
+      <div class="shop-item">
+        Increase Bullet Speed ($100)
+        <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button>
+      </div>
+      <div class="shop-item">
+        Increase Player Speed ($100)
+        <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button>
+      </div>
+      <div class="shop-item">
+        Shotgun ($100)
+        <button class="shop-button" onclick="buyShotgun()">Buy</button>
+        <span id="shotgunStatus">Not Purchased</span>
+      </div>
+      <div class="shop-item">
+        Minigun ($500)
+        <button class="shop-button" onclick="buyMinigun()">Buy</button>
+        <span id="minigunStatus">Not Purchased</span>
+      </div>
+      <div class="shop-item">
+        Sniper ($500)
+        <button class="shop-button" onclick="buySniper()">Buy</button>
+        <span id="sniperStatus">Not Purchased</span>
+      </div>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+    <script src="game.js"></script>
+    <script>
+        function showShop() {
+            gamePaused = true;
+            document.getElementById('shopContainer').style.display = 'flex';
+        }
+
+        function hideShop() {
+            gamePaused = false;
+            document.getElementById('shopContainer').style.display = 'none';
+            gameLoop(); // Restart the game loop
+        }
+    </script>
+  </body>
+</html>
