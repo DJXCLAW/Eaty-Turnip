@@ -1,7 +1,8 @@
 <br> <h1>ALERT</h1>
-<br> HACK ARENA IS NOW ON GLITCH : we officially moved it there because of speed) we did cause its faster github will be a checkpoint thing or something
+<br> HACK ARENA IS NOW ON GLITCH 
 <br> SITE: https://Hackarena.glitch.me
 <br> CODE: https://glitch.com/edit/#!/hackarena
+<hr>
 <br> <h2>CONTROLS</h2>
 <br> Enter: open/close shop
 <br> WASD/Arrow keys: movement
