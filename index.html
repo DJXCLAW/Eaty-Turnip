@@ -1,133 +1,220 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bean (balancing fixes)</title>
+<!--Images by wikipedia commons under the creative commons:
+https://creativecommons.org/share-your-work/cclicenses/#:~:text=Creative%20Commons%20licenses%20give%20everyone,creative%20work%20under%20copyright%20law.-->
+<html>
+  <head>
+    <title>Hack arena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://cdn.glitch.global/fadba06a-53b9-4278-aed7-4c499cf944a0/favicon%20(11).ico?v=1730474488696"
+    />
+<audio autoplay loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+  </head>
+  <body>
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #000;
-            font-family: Arial, sans-serif;
+      body {
+        background-image: url(https://cdn.glitch.global/fadba06a-53b9-4278-aed7-4c499cf944a0/backgroundtitlescreen.gif?v=1730573131127);
+        font-family: "Press start 2P", serif;
+        cursor: url("https://cdn.glitch.global/fadba06a-53b9-4278-aed7-4c499cf944a0/cursor%20(9).cur?v=1730565546290"),
+          auto;
+      }
+      .button-49,
+      .button-49:after {
+        width: 100px;
+        height: 76px;
+        line-height: 78px;
+        font-size: 20px;
+        font-family: "Press Start 2P", serif;
+        background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+        border: 0;
+        color: #fff;
+        letter-spacing: 3px;
+        box-shadow: 6px 0px 0px #00e6f6;
+        outline: transparent;
+        position: relative;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        cursor: url("https://cdn.glitch.global/fadba06a-53b9-4278-aed7-4c499cf944a0/cursor%20(8).cur?v=1730565512807"),
+          auto;
+      }
+
+      .button-49:after {
+        --slice-0: inset(50% 50% 50% 50%);
+        --slice-1: inset(80% -6px 0 0);
+        --slice-2: inset(50% -6px 30% 0);
+        --slice-3: inset(10% -6px 85% 0);
+        --slice-4: inset(40% -6px 43% 0);
+        --slice-5: inset(80% -6px 5% 0);
+
+        content: "PLAY";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          transparent 3%,
+          #00e6f6 3%,
+          #00e6f6 5%,
+          #ff013c 5%
+        );
+        text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+        clip-path: var(--slice-0);
+      }
+
+      .button-49:hover:after {
+        animation: 1s glitch infinite;
+        animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+        0% {
+          clip-path: var(--slice-1);
+          transform: translate(-20px, -10px);
         }
-        canvas {
-            display: block;
+        10% {
+          clip-path: var(--slice-3);
+          transform: translate(10px, 10px);
         }
-        #score, #health, #currency, #gameOver {
-            position: absolute;
-            color: white;
-            font-size: 20px;
-            top: 10px;
+        20% {
+          clip-path: var(--slice-1);
+          transform: translate(-10px, 10px);
         }
-        #score {
-            left: 10px;
+        30% {
+          clip-path: var(--slice-3);
+          transform: translate(0px, 5px);
         }
-        #health {
-            left: 10px;
-            top: 40px;
+        40% {
+          clip-path: var(--slice-2);
+          transform: translate(-5px, 0px);
         }
-        #currency {
-            left: 10px;
-            top: 70px;
+        50% {
+          clip-path: var(--slice-3);
+          transform: translate(5px, 0px);
         }
-        #gameOver {
-            display: none;
-            top: 100px;
-            left: 10px;
-            font-size: 30px;
-            color: red;
+        60% {
+          clip-path: var(--slice-4);
+          transform: translate(5px, 10px);
         }
-        #shopContainer {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            color: white;
-            text-align: center;
-            padding-top: 50px;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        70% {
+          clip-path: var(--slice-2);
+          transform: translate(-10px, 10px);
         }
-        #shopContainer .shop-item {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            width: 300px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 18px;
+        80% {
+          clip-path: var(--slice-5);
+          transform: translate(20px, -10px);
         }
-        #shopContainer .shop-button {
-            padding: 8px 15px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        90% {
+          clip-path: var(--slice-1);
+          transform: translate(-10px, 0px);
         }
-        #shopContainer .shop-button:hover {
-            background-color: #218838;
+        100% {
+          clip-path: var(--slice-1);
+          transform: translate(0);
         }
-        #shopContainer .shop-item span {
-            font-weight: bold;
-            font-size: 16px;
+      }
+
+      @media (min-width: 768px) {
+        .button-49,
+        .button-49:after {
+          width: 300px;
+          height: 100px;
+          line-height: 88px;
         }
-        .Inventory {
-            font-size: 16px;
-            padding: 10px 20px;
-            background-color: #FF0000;
-            color: black;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            top: 20px;
-            transition: background-color 0.3s ease;
+        .container {
+          height: 635px;
+          position: relative;
         }
-        .resume-button:hover {
-            background-color: #333;
+
+        .center {
+          margin: 0;
+          position: absolute;
+          top: 15%;
+          left: 50%;
+          -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
         }
+        /* Styles for the Instructions Section */
+        #instructions {
+          background-color: #333;
+          color: white;
+          padding: 20px;
+          width: 80%;
+          margin: 20px auto;
+          border-radius: 8px;
+          text-align: left;
+          display: none; /* Initially hidden */
+          cursor: url("https://cdn.glitch.global/fadba06a-53b9-4278-aed7-4c499cf944a0/cursor%20(9).cur?v=1730565546290"),
+            auto;
+        }
+      }
+
+      /* Button to Toggle Instructions */
+      .instructions-btn {
+        padding: 10px 20px;
+        font-size: 10px;
+        cursor: pointer;
+        background-color: #ff013c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-top: 20px;
+        cursor: url("https://cdn.glitch.global/fadba06a-53b9-4278-aed7-4c499cf944a0/cursor%20(8).cur?v=1730565512807"),
+          auto;
+        font-family: "Press start 2p", monospace;
+      }
+      h1 {
+        color: white;
+        position: relative; /* Allows 'top' to work as an offset */
+        top: -60px;
+        text-align: center;
+        font-size: 100px;
+        font-family: "Press start 2p", monospace;
+      }
     </style>
-</head>
-<body>
-    <div id="score">Score: 0</div>
-    <div id="health">HP: 100</div>
-    <div id="currency">Currency: 0</div>
-    <div id="gameOver">Game Over</div>
-
-    <div id="shopContainer">
-        <button class="Inventory" onclick="openInventory()">Open Your Inventory</button>
-        <div class="shop-item">Heal HP (+50) ($50) <button class="shop-button" onclick="buyHealthUpgrade()">Buy</button></div>
-        <div class="shop-item">Increase Bullet Speed ($100) <button class="shop-button" onclick="buyBulletSpeedUpgrade()">Buy</button></div>
-        <div class="shop-item">Increase Player Speed ($100) <button class="shop-button" onclick="buyPlayerSpeedUpgrade()">Buy</button></div>
-        <div class="shop-item">Shotgun ($100) <button class="shop-button" onclick="buyShotgun()">Buy</button> <span id="shotgunStatus">Not Purchased</span></div>
-        <div class="shop-item">Minigun ($500) <button class="shop-button" onclick="buyMinigun()">Buy</button> <span id="minigunStatus">Not Purchased</span></div>
-        <div class="shop-item">Sniper ($500) <button class="shop-button" onclick="buySniper()">Buy</button> <span id="sniperStatus">Not Purchased</span></div>
+    <h1>HACK ARENA</h1>
+    <div class="container">
+      <div class="center">
+        <a href="https://hackarena.glitch.me/game.html">
+          <button class="button-49" role="button" onclick>PLAY</button>
+        </a>
+        <button class="instructions-btn" onclick="toggleInstructions()">
+          Show Instructions (Double Click)
+        </button>
+        <div id="instructions">
+          <h2>Game Instructions</h2>
+          <p>1. Use the arrow keys or WASD to move your character.</p>
+          <p>2. Press space or click to fire.</p>
+          <p>3. Aim with your mouse.</p>
+          <p>4. Hit enter to open and close the shop.</p>
+          <p>5. Use the number keys (1-4) to switch weapons.</p>
+          <p>6. Survive as long as possible to increase your score!</p>
+        </div>
+      </div>
     </div>
-
-
-    <canvas id="gameCanvas"></canvas>
-    <script src="game.js"></script>
     <script>
-        function showShop() {
-            gamePaused = true;
-            document.getElementById('shopContainer').style.display = 'flex';
+      // JavaScript to Toggle Instructions Visibility
+      function toggleInstructions() {
+        const instructions = document.getElementById("instructions");
+        if (instructions.style.display === "none") {
+          instructions.style.display = "block";
+        } else {
+          instructions.style.display = "none";
         }
-
-        function hideShop() {
-            gamePaused = false;
-            document.getElementById('shopContainer').style.display = 'none';
-            gameLoop(); // Restart the game loop
-        }
-
+      }
     </script>
-</body>
+  </body>
 </html>
